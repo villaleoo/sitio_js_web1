@@ -1,0 +1,167 @@
+body{
+    margin: 0;
+    background-color: rgb(58, 33, 34);
+    color: rgb(255, 253, 253);
+    font-family:  Georgia, sans-serif; 
+}
+.d-flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.d-none{
+    display: none;
+}
+.d-activo{
+    display: block;
+}
+.btn-syle{
+    margin-top: 5px;
+    width: 15vh;
+    height: 4vh;
+    border-radius: 15px;
+    background-color: rgb(255, 253, 253);
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgb(58, 33, 34);
+}
+.btn-syle:hover{
+    color:rgb(255, 253, 253) ;
+    background-color:rgb(58, 33, 34);
+}
+h1{
+    font-size: 6vh;
+ 
+}
+h2{
+    font-size: 3vh;
+    text-transform: uppercase;
+}
+h4{
+    font-size: medium;
+}
+ul{
+    list-style: none;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+.contenedor{
+    width: auto;        /*width padre de  header main footer: inherit*/
+    height: 100%;
+    padding: 0 8%;
+    display: flex;
+    flex-direction: column;
+    font-size: medium;
+    
+   
+}
+header{
+    width: inherit;  /*le doy display flex al centro para que despues la nav que esta dentro crezca desde el centro (width 60%)*/
+    height: 8vh; /* height padre de nav y ul: inherit */
+
+}
+nav{
+    width: 100%;
+    height: inherit;    /*se fija la nav con fixed*/
+    position: fixed;
+    background-color:rgb(58, 33, 34); /*se le da un back para que al scrollear resalte*/
+   
+    
+}
+nav > ul{
+    width: 50%;
+    height: inherit;
+    display: flex;
+    justify-content: space-between;   /*esto es para separar cada item li de la nav*/
+    align-items: center;
+   
+}
+nav > ul > li {
+    width: inherit; /* + class display-center*/
+   
+}
+nav > ul > li > a{
+  padding: 0 10%;
+  text-align: center;
+  font-weight: bold;      /* estilos a las a de la nav*/
+  text-transform: uppercase;
+    
+}
+nav > ul > li > a:hover{
+    background-color:lightyellow;
+    color: black;
+    border-radius: 5px;
+    border-bottom: 3px solid black;
+    border-right: 2px solid black;
+    
+}
+main{
+    width: inherit;
+    
+}
+form{
+    flex-direction: column;     /*+ class d-flex-center*/
+    width: auto;
+    background-color: rgba(94, 73, 73, 0.219);
+    padding: 5%;
+}
+form > input{
+    width: 90%;
+    margin: 2px 0;
+}
+footer{
+    height: 30vh;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: rgba(255, 253, 253, 0.253);
+    background-color: rgba(0, 0, 0, 0.11);
+    
+}
+/*/////////////////////////////ESTILOS PROPIOS DEL HOME///////////////////////////////////////*/
+.contenedor-main-inicio{
+    width: inherit;
+
+}
+.contenedor-main-inicio > ul  {
+    width: inherit;
+    height: 80vh;
+    display: flex;
+    justify-content: space-between;
+
+}
+.contenedor-main-inicio > ul > li {
+    width: 100%;
+    height: inherit;
+    margin: 0 1px;
+    
+
+}
+.contenedor-main-inicio > ul > li > img {
+   width: inherit;
+   height: inherit;
+   object-fit: cover; /*propiedad para que las img no pierdan calidad /se ajusten al padre*/
+
+}
+.contenedor-form-inicio{
+    width: inherit;
+    height: 70vh;
+    margin: 3% 0 0 0;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+
+}
+.contenedor-form-inicio > .texto-form {
+    width: 35%;
+    flex-direction: column;
+    
+}
+
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/style.css" >
+    <title>Inicio / BooM</title>
+</head>
+<body>
+    <div class="contenedor">
+        <header class="d-flex-center">
+            <nav class="d-flex-center">
+                <ul>
+                    <li class="d-flex-center"><a href="./index.html">Inicio</a></li>
+                    <li class="d-flex-center"><a href="./secciones/cocktails.html">Cocktails</a></li>
+                    <li class="d-flex-center"><h1>BooM</h1></li>
+                    <li class="d-flex-center"><a href="./secciones/recetas.html">Recetas</a></li>
+                    <li class="d-flex-center"><a href="./secciones/favoritos.html">Favoritos</a></li>
+                    
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <div class="contenedor-main-inicio">
+                <ul>
+                    <li>
+                        <img src="./imgs/sorrentinos-tricolor.jpg" alt="sorrentinos con salsa">
+                    </li>
+                    <li>
+                        <img src="./imgs/real-burger.jpg" alt="hamburguesa de carne completa">
+                    </li>
+                    <li>
+                        <img src="./imgs/cocktail-red.jpg" alt="cocktail rojo fondo azul">
+                    </li>
+                </ul>
+                <div class="contenedor-form-inicio">
+                    <div class="texto-form d-flex-center">
+                        <h2 class="">Envianos un mensaje</h2>
+                        <h4>Mandanos tu receta o envianos tu opinion sobre el servicio y los productos.</h4>
+                    </div>
+                    <form id="formulario" class="d-flex-center">
+                        <input type="text" name="nombre" placeholder="Ingrese su nombre" maxlength="15" required>
+                        <input type="email" name="email" placeholder="Ingrese su mail" required maxlength="20">
+                        <textarea name="mensaje" id="" cols="80" rows="20" placeholder="Escribinos tu mensaje" maxlength="800" required></textarea>
+
+                        <div id="contenedor-captcha">
+                            <div class="d-flex-center">
+                                <p id="captcha"></p>
+                                <button id="btn-generar-captcha" type="button">🔄</button>
+                            </div>
+                            <input id="inputCaptchaIngresado" type="text" name="captcha" placeholder="Ingrese captcha" required>
+                            <p id="alerta-captcha"></p>
+                        </div>
+
+
+                        <button id="btn-enviar-form" class="btn-syle d-none" type="submit">Enviar</button>
+                    </form>
+
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- desventajas: en mediasQery no podes controlar todo desde "contenedor" (por dejar footer fuera) -->
+    <footer>
+        <div>
+            <p>Visitanos en nuestras redes sociales</p>
+            <a href="https://www.instagram.com" target="_blank"><img src="./imgs/icono-instagram.png" alt="icono instagram"></a>
+            <a href="https://www.youtube.com" target="_blank"><img src="./imgs/icono-youtube.png" alt="icono youtube"></a>
+            <a href="https://www.tiktok.com" target="_blank"><img src="./imgs/icono-tiktok.png" alt="icono tik tok"></a>
+            <p>2023 © todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script type="text/javascript" src="./js/scripts.js"></script>
+</body>
+</html>
