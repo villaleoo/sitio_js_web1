@@ -41,19 +41,18 @@
                     </div>
                     <form id="formulario" class="d-flex-center">
                         <input type="text" name="nombre" placeholder="Ingrese su nombre" maxlength="15" required>
-                        <input type="email" name="email" placeholder="Ingrese su mail" required maxlength="20">
+                        <input type="email" name="email" placeholder="Ingrese su mail" maxlength="20" required>
                         <textarea name="mensaje" id="" cols="80" rows="20" placeholder="Escribinos tu mensaje" maxlength="800" required></textarea>
 
-                        <div id="contenedor-captcha">
+                        <div>
                             <div class="d-flex-center">
                                 <p id="captcha"></p>
                                 <button id="btn-generar-captcha" type="button">🔄</button>
                             </div>
-                            <input id="inputCaptchaIngresado" type="text" name="captcha" placeholder="Ingrese captcha" required>
+                            <input id="inputCaptchaIngresado" type="text" name="captcha" maxlength="6" placeholder="Ingrese captcha" required>
                             <p id="alerta-captcha"></p>
                         </div>
-
-
+                        
                         <button id="btn-enviar-form" class="btn-syle d-none" type="submit">Enviar</button>
                     </form>
 
@@ -62,7 +61,7 @@
         </main>
     </div>
     <!-- desventajas: en mediasQery no podes controlar todo desde "contenedor" (por dejar footer fuera) -->
-    <footer>
+    <footer class="d-flex-center">
         <div>
             <p>Visitanos en nuestras redes sociales</p>
             <a href="https://www.instagram.com" target="_blank"><img src="./imgs/icono-instagram.png" alt="icono instagram"></a>
