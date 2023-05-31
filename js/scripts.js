@@ -28,7 +28,6 @@ function enviarFormulario(e){   //se ejecuta cuando se hace click en el boton EN
     let formData= new FormData(formulario);   /*Captura/genera entre otros: "entries" obj {[nameDelInput:"valor"], ...} */
     let valoresEnInputs=[];
     let conjuntosClaveValor=[];
-
      for (let claveValorInput of formData.entries()) { 
         /* for of itera cualquier dato(string,obj,array) */
         /*claveValorInput en cada iteracion vale un array de 2 elementos ["name del input", "valor"] */
