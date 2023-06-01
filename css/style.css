@@ -4,43 +4,16 @@ body{
     color: rgb(255, 253, 253);
     font-family:  Georgia, sans-serif; 
 }
-.d-flex-center{
+header{
+    width: auto;
+    position: fixed;
+    top: 0;
+    background-color:inherit; 
+    z-index: 9; 
+} 
+nav > ul{
+    width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.d-none{
-    display: none;
-}
-.d-activo{
-    display: block;
-}
-.btn-syle{
-    margin-top: 5px;
-    width: 15vh;
-    height: 4vh;
-    border-radius: 15px;
-    background-color: rgb(255, 253, 253);
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: rgb(58, 33, 34);
-}
-.btn-syle:hover{
-    color:rgb(255, 253, 253) ;
-    background-color:rgb(58, 33, 34);
-}
-h1{
-    font-size: 6vh;
-    
- 
-}
-h2{
-    font-size: 3vh;
-    text-transform: uppercase;
-}
-h4{
-    font-size: medium;
 }
 ul{
     list-style: none;
@@ -50,150 +23,174 @@ a{
     text-decoration: none;
     color: inherit;
 }
-.contenedor{
-    width: auto;        /*width padre de  header main footer: inherit*/
-    height: 100%;
-    padding: 0 8%;
+.d-activo{
     display: flex;
-    flex-direction: column;
-    font-size: medium;
-    
-   
 }
-header{
-    width: inherit;  /*le doy display flex al centro para que despues la nav que esta dentro crezca desde el centro (width 60%)*/
-    height: 8vh; /* height padre de nav y ul: inherit */
-    
-
-}
-nav{
-    width: 100%;
-    height: inherit;    /*se fija la nav al scrollear con fixed*/
-    position: fixed;
-    background-color:rgb(58, 33, 34); /*se le da un back para que al scrollear resalte*/
-    z-index: 9;
-    
-}
-nav > ul{
-    width: 50%;
-    height: inherit;
-    display: flex;
-    justify-content: space-between;   /*esto es para separar cada item li de la nav*/
-    align-items: center;
-   
-}
-nav > ul > li {
-    width: inherit; /* + class display-center*/
-   
-}
-nav > ul > li > a{
-  padding: 0 10%;
-  text-align: center;
-  font-weight: bold;      /* estilos a las a de la nav*/
-  text-transform: uppercase;
-    
-}
-nav > ul > li > a:hover{
-    background-color:lightyellow;
-    color: black;
-    border-radius: 5px;
-    border-bottom: 3px solid black;
-    border-right: 2px solid black;
-    
+.d-none{
+    display: none;
 }
 main{
-    width: inherit;
-    
-}
-form{
-    flex-direction: column;     /*+ class d-flex-center*/
     width: auto;
-    background-color: rgba(94, 73, 73, 0.219);
-    padding: 5%;
-}
-form > input{
-    width: 90%;
-    margin: 2px 0;
+    padding: 0 2%;
 }
 footer{
-    height: 30vh;
-    width: auto;
-    margin-top: 2%;
-    text-align: center;
-    color: rgba(255, 253, 253, 0.253);
-    background-color: rgba(0, 0, 0, 0.11);
-    
-}
-/*/////////////////////////////ESTILOS PROPIOS DEL HOME///////////////////////////////////////*/
-.contenedor-main-inicio{
-    width: inherit;
-
-}
-.contenedor-main-inicio > ul  {
-    width: inherit;
-    height: 80vh;
     display: flex;
-    justify-content: space-between;
-
-}
-.contenedor-main-inicio > ul > li {
-    width: 100%;
-    height: inherit;
-    margin: 0 1px;
-    
-
-}
-.contenedor-main-inicio > ul > li > img {
-   width: inherit;
-   height: inherit;
-   object-fit: cover; /*propiedad para que las img no pierdan calidad /se ajusten al padre*/
-
-}
-.contenedor-form-inicio{
-    width: inherit;
-    height: 70vh;
-    margin: 3% 0 0 0;
-    display: flex;
-    justify-content: space-between;
-    text-align: center;
-
-}
-.contenedor-form-inicio > .texto-form {
-    width: 35%;
-    flex-direction: column;
-    
-}
-
-.contenedor-main-favoritos{
-    width: inherit;
-    height: 55vh;
-    display: flex;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
-    
+} 
+.copyright{
+    color: rgba(119, 136, 153, 0.541);
 }
-.contenedor-main-favoritos > table{
-    width: 100%;
-    height: 100%;
-    border: 3px solid rgba(185, 143, 143, 0.486);
-    
-   
+/*///////////////INICIO///////////////*/
+.lista-principal{
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
-.contenedor-main-favoritos > table > tbody{
-    width: 100%;
-    
+.lista-principal > li > img{
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
 }
-/* /////////////////ESTILOS DE FAVORITOS////////////// */
-.th-center{
-    width: 60vh;
-}
-th{
-   
-    width: 10vh;
-}
-/* /////////////////ESTILOS DEMÁS SECCIONES////////////// */
-.contenido-secciones{
-    flex-direction: column;
+.contenedor-contacto{
     text-align: center;
 }
+.contenedor-contacto > form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(80, 47, 47, 0.733);
+    
+}
+#btnGenerarCaptcha{
+    margin-bottom: 2px;
+}
+
+@media only screen and (max-width: 1024px){
+    body{
+        font-size: medium;
+    }
+    h1{
+        font-size: xx-large;
+    }
+    h2 {
+        font-size: large;
+    }
+    h4{
+        font-size: medium;
+    }
+    header{
+        width: 100%;
+    }
+    nav{
+        display: none;
+        justify-content: center;
+        flex-direction: column;
+    }
+    nav > ul{
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        height: 30vh;
+    }
+    nav.d-flex{
+        display: flex;
+    }
+    .logo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2%;
+   }
+   #btnNavDesplegable{
+       background-color: rgb(255, 253, 253);
+       border-radius: 5px;
+   }
+    main{
+        margin-top: 12vh;
+    }
+    /*//////////////INICIO////////////////////*/
+    .lista-principal{
+        height: 80vh;
+    }
+    .lista-principal > li  {
+        width: 100%;
+        height: 90%;
+        margin: 0 1px;
+    }
+   
+    .contenedor-contacto > form > input , textarea{
+        width: 80%;
+        margin:2px 0;
+    }
+}
+
+@media only screen and (min-width: 1025px){
+    body{
+        font-size: large;
+    }
+    header{
+        width:90%;
+        padding:0 5%;     /*aqui el 5% de un lado mas el 5% del otro da el 10% que le falta al width*/
+        height: 10vh;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    h1{
+        font-size: 7vh;
+    }
+    h2{
+        font-size: xx-larger;
+    }
+    h4{
+        font-size: large;
+    }
+    .logo , nav{
+        width: 50%;     /*a los 2 componentes hijos del header les damos el mismo espacio*/
+    }
+    nav > ul{
+        justify-content: space-evenly;
+        
+    }
+    #btnNavDesplegable{
+        display: none;
+    }
+    main{
+        width: auto;
+        margin-top: 11vh;       /*acorde al espacio del header*/
+    }
+    footer{
+        margin-top: 2%;
+    }
+    /*////////////////////INICIO////////////////*/
+    .lista-principal{
+        height: 82vh;           /*mas margenes a la lista de imagenes en la vista desktop*/
+        padding: 0 5%;
+    }
+    .lista-principal > li{
+        width: 100%;
+        height: 100%;               /*esto se repite en mobile pero veo apropiado repetirlo para futuras modificaciones*/
+        margin: 0 1px;
+    }
+    .contenedor-contacto > form > input , textarea{
+        width: 50%;
+        margin: 2px 0;
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
