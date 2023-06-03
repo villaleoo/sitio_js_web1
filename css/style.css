@@ -68,6 +68,9 @@ footer{
 #btnGenerarCaptcha{
     margin-bottom: 2px;
 }
+.contenedor-main-favoritos{
+    margin-top: 100px;
+}
 
 @media only screen and (max-width: 1024px){
     body{
