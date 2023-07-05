@@ -23,14 +23,26 @@ a{
     text-decoration: none;
     color: inherit;
 }
+button{
+    cursor: pointer;
+}
 .d-activo{
     display: flex;
 }
 .d-none{
     display: none;
 }
-.backgorud-resaltado{
-    background-color: lightgreen;
+.seccion-selec{
+    text-decoration: underline;
+}
+.navegacion{
+    cursor: pointer;
+}
+.contenedor-spinner{
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 main{
@@ -40,6 +52,7 @@ main{
 }
 footer{
     width: 100%;
+    height: 20vh;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -49,17 +62,53 @@ footer{
 .copyright{
     color: rgba(119, 136, 153, 0.541);
 }
+section#listaRecetas{
+    width: auto;
+    display: flex;
+    flex-direction: column;
+}
+section#listaRecetas > article{
+    background-color: rgba(80, 62, 63, 0.438);
+    margin: 1% 0;
+    cursor: pointer;
+}
+
 /*///////////////INICIO///////////////*/
-.lista-principal{
+
+.tarjetas-inicio{
     width: auto;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.lista-principal > li > img{
-    width: inherit;
-    height: inherit;
+.tarjetas-inicio > article{
+    width: 100%;
+    height: 100%;
+    position: relative;
     object-fit: cover;
+    background-position:50% 0;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    
+    
+}
+.tarjetas-inicio > article > .texto-articulo{
+    height: 25%;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.582);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    cursor: pointer;
+
+}
+.texto-articulo > h2{
+    text-transform: uppercase;
+  
 }
 .contenedor-contacto{
     text-align: center;
@@ -75,55 +124,72 @@ footer{
 #btnGenerarCaptcha{
     margin-bottom: 2px;
 }
-.contenedor-main-favoritos{
-    margin-top: 100px;
-}
-
-/*/////////////SECCION TABLA///////////////////////*/
-.estilo-primer-fila{
-    color: red;
-    font-size: 10px;
-    margin-right: 3px;
-    font-weight: bold;
-    text-transform: uppercase;
-  
-}
-.estilos-btn-tabla{
-    background-color: inherit;
+/*////////////////////////////COCKTAILS Y COMIDAS//////////////////////////////////////*/
+input#inputBusqueda{
+    width: 30vh;
+    border-radius: 5px;
     border: none;
+}
+.btn-busqueda-recetas{
+    width: 8vh;
+    border-radius: 100px;
+    border: none;
+}
+.contenedor-paginacion{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.contenedor-paginacion > button{
+    background-color: inherit;
     color: white;
-    cursor: pointer;
+    border: none;
+    margin:0 5px;
     text-decoration: underline;
 }
-table{
-    width: 100%;
-    text-align: center;
-    background-color: rgba(80, 47, 47, 0.733);
-}
-th{
-    border-bottom: solid white 3px;
-}
-.contenedor-datos-tabla{
-    width:100%;
-    height: 100%;
-}
-.form-tabla-recetas{
-    display: flex; 
-    flex-direction: column;
-}
-.form-tabla-recetas >form{
+
+/*//////////////////////////////////////TABLA MAGICA///////////////////////////////////*/
+form#formularioDeTabla{
+    position: relative;
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+form#formularioDeTabla > select{
+    width:40vh;
 }
 .contenedor-botones-form-tabla{
-    display: flex;
-    margin-top: 2%;
+    position: absolute;
+    bottom: 0;
 }
-article{
-    background-color: rgba(80, 47, 47, 0.733);
-    border:1px solid black
+.contenedor-botones-form-tabla > button{
+    border-radius: 10px;
+    border: none;
+}
+table#tablaRecetas{
+    width: 100%;
+    
+}
+table#tablaRecetas > tbody > tr > td > button.btn-tabla{
+    background-color: inherit;
+    border:none;
+    color: white;
+    text-decoration: underline;
+}
+span.estilo-primer-fila{
+    font-size: xx-small;
+    color: red;
 }
 
+/*////////////////////////////VISTA RECETA////////////////////*/
+.vista-receta{
+    background-color: rgba(255, 255, 255, 0.041);
+    padding: 0 10%;
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 
 @media only screen and (max-width: 1024px){
@@ -166,36 +232,47 @@ article{
        background-color: rgb(255, 253, 253);
        border-radius: 5px;
    }
+   .contenedor-spinner{
+        height: calc(100vh - 20vh - 13vh);
+   }
     main{
-        margin-top: 12vh;
-       
+        margin-top: 12vh; 
+    }
+    section#listaRecetas{
+        padding: 0 2%;
+    }
+  
+    section#listaRecetas > article > p{
+        font-size: small;
     }
     /*//////////////INICIO////////////////////*/
-    .lista-principal{
-        height: 80vh;
+    .tarjetas-inicio{
+        width: auto;
+        height: 50vh; 
     }
-    .lista-principal > li  {
+    .tarjetas-inicio > article > .texto-articulo{
+        height: 8vh;
+    }
+    .texto-articulo > h2{
+        font-size:x-small;
+    }
+    .formulario-contacto{
+        width: auto;
+        padding: 0 5%;
+
+    }
+    .formulario-contacto > input , textarea{
         width: 100%;
-        height: 90%;
-        margin: 0 1px;
     }
-    .contenedor-contacto > form > input , textarea{
-        width: 80%;
-        margin:2px 0;
+    .formulario-contacto > #captchaContacto{
+        width: 35%;
     }
-    /*////////////SECCION TABLA/////////////////*/
-    .form-tabla-recetas >form  {
-        align-items: center;
+    /*//////////////TABLA MAGICA///////////////*/
+    form#formularioDeTabla{
+        height: 20vh;
     }
-    .form-tabla-recetas > form > select{
-        width: 60%;
-    }
-    .contenedor-botones-form-tabla{
-        justify-content: center;
-    }
-    article > h5{
-        font-size: x-small;
-    }   
+    
+     
 }
 
 @media only screen and (min-width: 1025px){
@@ -214,7 +291,7 @@ article{
         font-size: 7vh;
     }
     h2{
-        font-size: xx-larger;
+        font-size: x-large;
     }
     h4{
         font-size: large;
@@ -237,32 +314,39 @@ article{
         margin-top: 2%;
     }
     /*////////////////////INICIO////////////////*/
-    .lista-principal{
-        height: 82vh;           /*mas margenes a la lista de imagenes en la vista desktop*/
+    .tarjetas-inicio{
+        height: 82vh;          
         padding: 0 5%;
     }
-    .lista-principal > li{
+    .tarjetas-inicio > article{
         width: 100%;
-        height: 100%;               /*esto se repite en mobile pero veo apropiado repetirlo para futuras modificaciones*/
+        height: 100%;
         margin: 0 1px;
     }
-    .contenedor-contacto > form > input , textarea{
-        width: 50%;
-        margin: 2px 0;
-    }
-    /*////////////SECCION TABLA//////////*/
-    .form-tabla-recetas{
+    .formulario-contacto{
         width: auto;
-        height: 55%;
-        align-items: center;   
+        height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
-    .form-tabla-recetas > form{
+    .formulario-contacto > input , textarea{
         width: 50%;
+        margin-top: 2px;
     }
-    .contenedor-botones-form-tabla{
-        justify-content: space-evenly;
-    } 
+    .formulario-contacto > #captchaContacto{
+        width: 15%;
+    }
+    /*/////////////////////////TABLA MAGICA////////////////////*/
+    form#formularioDeTabla{
+        height: 15vh;
+    }
+    table#tablaRecetas{
+        margin-top: 2%;
+    }
 }
+
 
 
 

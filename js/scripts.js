@@ -1,473 +1,27 @@
-document.addEventListener("DOMContentLoaded", main)
+document.addEventListener("DOMContentLoaded", main);    //(1) cuando carga el sitio se llama la funcion main
+window.addEventListener("popstate", e=>{ 
+    console.log(e);       //esto maneja el evento de ir hacia adelante y atras en el sitio
+    
+    // let estadoAnterior= e.state.idSeccion;     // al hacer click en adelante o atras, captura el id del elemento donde estabamos parados anteriormente
+    // console.log("estado id="+ estadoAnterior);
+    if(e.state != null){
+        checkearSeccionEnNav(e.state.idSeccion);   //selecciona la seccion en nav con el id capturado
+        renderContenidoDeSeccion(e.state.idSeccion);//renderiza el contenido acorde al id capturado
+        
+    }else{
+        checkearSeccionEnNav("inicio");
+        renderContenidoDeSeccion("inicio");
+        
+    }
+})
 
 function main() {
-    "use strict"
-    
-    const arregloComidas=[
-        {
-            nombre: "Asado",
-            ingredientes: ["Carne de res", "Sal" , "Chimichurri"],
-            descripcion: "El asado argentino es un plato típico que se prepara asando carne de res a la parrilla. Para su preparación, se sazona la carne con sal y se la cocina a fuego lento hasta obtener una textura jugosa y sabrosa. Se puede acompañar con chimichurri, una salsa a base de aceite, vinagre, ajo y condimentos.",
-            vegano: false
-        },
-        {
-            nombre: "Milanesa de Soja",
-            ingredientes: ["Soja texturizada", "Pan rallado", "Huevos", "Condimentos"],
-            descripcion: "La milanesa de soja es una opción vegana popular en Argentina. Se prepara utilizando soja texturizada empanada en pan rallado con huevos y condimentos. Luego, se fríe en aceite hasta que esté dorada y crujiente. Es una alternativa sabrosa y libre de carne.",
-            vegano: true
-        },
-        {
-            nombre: "Locro",
-            ingredientes: ["Maíz blanco", "Poroto", "Calabaza", "Panceta", "Cebolla"],
-            descripcion: "El locro es un plato tradicional argentino que se prepara con maíz blanco, porotos, calabaza, panceta y cebolla. Para su elaboración, se cocinan los ingredientes a fuego lento hasta que adquieran una consistencia espesa y sabrosa. Es ideal para los días fríos y se suele disfrutar en festividades patrias.",
-            vegano: false
-        },
-        {
-            nombre: "Pizza Especial",
-            ingredientes: ["Harina","Levadura", "Salsa de tomate", "Queso", "Jamón", "Morrones"],
-            descripcion: "La pizza es un plato muy popular en Argentina. Para hacer una pizza clásica, se necesita masa de pizza (harina y levadura), salsa de tomate, queso, jamón y morrones. La masa se extiende, se cubre con salsa de tomate, se agregan los ingredientes y se hornea hasta que esté lista. ¡Es una deliciosa opción para compartir en familia o con amigos!",
-            vegano: false
-        },
-        {
-            nombre: "Empanada de carne",
-            ingredientes: ["Carne picada", "Cebolla", "Huevos", "Aceitunas", "Condimentos"],
-            descripcion: "Las empanadas son un clásico de la gastronomía argentina. Para hacerlas, se prepara un relleno con carne picada, cebolla, huevo, aceitunas y especias. Luego, se rellenan discos de masa, se cierran y se hornean o fríen hasta que estén doradas. Son ideales como entrada o para disfrutar en cualquier ocasión.",
-            vegano: false
-        },
-        {
-            nombre: "Guiso de Lentejas",
-            ingredientes: ["Lenteja", "Cebolla", "Zanahoria", "Papa", "Condimentos"],
-            descripcion: "El guiso de lentejas es un plato reconfortante y nutritivo. Se prepara con lentejas, cebolla, zanahoria, papa y condimentos. Todos los ingredientes se cocinan juntos hasta que las lentejas estén tiernas y se forme un caldo sabroso. Es una opción vegetariana y se puede servir con arroz o pan.",
-            vegano: true
-        },
-        {
-            nombre: "Provoleta",
-            ingredientes: ["Queso provolone", "Orégano", "Aceite de oliva"],
-            descripcion: "La provoleta es un plato típico de la cocina argentina que consiste en queso provolone a la parrilla. Se condimenta con orégano y se rocía con aceite de oliva. Se cocina hasta que el queso esté derretido y se sirve caliente. Es una opción deliciosa como entrada o para compartir en una reunión.",
-            vegano: false
-        },
-        {
-            nombre: "Fainá",
-            ingredientes: ["Harina", "Agua", "Aceite de oliva", "Sal"],
-            descripcion: "La fainá es una especie de pan plano o torta hecha a base de harina de garbanzo. Se prepara mezclando harina de garbanzo, agua, aceite de oliva y sal, y se hornea hasta que esté dorada y firme. Se puede disfrutar como acompañamiento de pizzas o como plato principal.",
-            vegano: true
-        },
-        {
-            nombre: "Ravioles",
-            ingredientes: ["Harina","Huevos", "Acelga", "Salsa"],
-            descripcion: "Los ravioles son una pasta rellena muy popular en Argentina. Se hace una masa con harina y huevo, se rellena con ingredientes como carne, pollo, verduras o queso, y se cocina en agua hirviendo. Se sirven con salsa a elección y queso rallado. Son una delicia para disfrutar en cualquier ocasión.",
-            vegano: false
-        },
-        {
-            nombre: "Hamburguesa completa",
-            ingredientes: ["Pan", "Hamburguesa", "Queso", "Lechuga", "Tomate"],
-            descripcion: "una deliciosa combinación de ingredientes clásicos que resulta en una experiencia culinaria irresistible. Para prepararla, asa una jugosa hamburguesa y colócala sobre un suave pan de hamburguesa.Añade queso derretido,lechuga fresca y rodajas de tomate.¡Disfruta de una hamburguesa completa y sumérgete en su irresistible sabor!",
-            vegano: false
-        },
-        {
-            nombre: "Ñoquis",
-            ingredientes: ["Papa", "Harina", "Huevos", "Salsa de tomate"],
-            descripcion: "Los ñoquis son una pasta de origen italiano muy popular en Argentina. Se preparan mezclando puré de papa con harina y huevo, se forman pequeñas bolitas y se cocinan en agua hirviendo. Se sirven con salsa a elección y queso rallado. Son una opción deliciosa y versátil.",
-            vegano: false
-        },
-        {
-            nombre: "Carbonada",
-            ingredientes: ["Carne de res", "Panceta", "Zanahoria", "Batata", "Choclo"],
-            descripcion: "La carbonada es un guiso típico argentino que se prepara con carne de res, panceta, zanahoria, batata y choclo. Se cocina a fuego lento hasta que todos los ingredientes estén tiernos y se haya formado un caldo sabroso. Es un plato reconfortante ideal para los días fríos.",
-            vegano: false
-        },
-        {
-            nombre: "Tarta de Verduras",
-            ingredientes: ["Harina", "Verdura","Manteca", "Queso", "Huevos", "Crema"],
-            descripcion: "La tarta de verduras es un plato versátil y nutritivo. Se prepara con masa para tarta(harina,manteca y agua), verduras de elección (como espinacas, zanahorias, cebolla), queso, huevos y crema. Se hornea hasta que la masa esté dorada y el relleno esté cocido. Es una opción saludable y deliciosa.",
-            vegano: false
-        },
-        {
-            nombre: "Matambre a la Pizza",
-            ingredientes: ["Matambre", "Salsa de tomate", "Queso", "Morrones"],
-            descripcion: "El matambre a la pizza es un plato típico de la cocina argentina. Consiste en un matambre relleno, cubierto con salsa de tomate, queso y morrones, y cocido al horno. Se sirve caliente y cortado en porciones. Es una opción sabrosa y muy popular en reuniones y asados.",
-            vegano: false
-        },
-        {
-            nombre: "Pastel de Papa",
-            ingredientes: ["Papa", "Carne picada", "Cebolla", "Huevos", "Condimentos"],
-            descripcion: "El pastel de papa es un plato reconfortante y sabroso. Se prepara con una capa de puré de papa en la base y carne picada con cebolla y condimentos en el relleno. Se hornea hasta que esté dorado y se sirve caliente. Es una opción popular en las mesas argentinas.",
-            vegano: false
-        },
-        {
-            nombre: "Choripán",
-            ingredientes: ["Chorizo", "Pan", "Chimichurri"],
-            descripcion: "El choripán es un clásico argentino. Consiste en un chorizo a la parrilla servido en un pan y acompañado de chimichurri y salsa criolla. Es una opción fácil y rápida para disfrutar en una reunión o como comida callejera. El choripán es muy popular en los asados argentinos.",
-            vegano: false
-        },
-        {
-            nombre: "Sorrentinos",
-            ingredientes: ["Harina", "Huevos", "Salsa de tomate", "Queso rallado"],
-            descripcion: "Los sorrentinos son una pasta rellena similar a los ravioles, pero de mayor tamaño. Se preparan con una masa especial(harina y huevos), se rellenan con ingredientes como carne, pollo, verduras o queso, y se cocinan en agua hirviendo. Se sirven con salsa a elección y queso rallado. Son una opción deliciosa y contundente.",
-            vegano: false
-        },
-        {
-            nombre: "Chipá",
-            ingredientes: ["Almidón", "Queso", "Huevos", "Leche", "Manteca"],
-            descripcion: "El chipá es un pan de queso tradicional de la gastronomía guaraní que también es popular en Argentina. Se elabora con almidón de mandioca, queso, huevos, leche y manteca. Se mezclan los ingredientes, se hornean y se obtiene un pan tierno y sabroso. Es ideal para acompañar el mate o el café.",
-            vegano: false
-        },
-        {
-            nombre: "Pastelitos",
-            ingredientes: ["Harina","Agua", "Membrillo", "Azúcar impalpable"],
-            descripcion: "Los pastelitos son una tradición argentina, especialmente en épocas de carnaval. Se preparan con masa para pastelitos(harina y agua), se rellenan con dulce de membrillo o batata, se cierran y se fríen hasta que estén dorados. Luego se espolvorean con azúcar impalpable. Son una delicia dulce y crujiente.",
-            vegano: true
-        },
-        {
-            nombre: "Sopa Paraguaya",
-            ingredientes: ["Harina", "Queso", "Cebolla", "Leche", "Manteca"],
-            descripcion: "La sopa paraguaya es una especie de pan de maíz cuajado que se consume en Argentina y Paraguay. Se prepara mezclando harina de maíz, queso rallado, cebolla, leche y manteca. La mezcla se hornea hasta que esté dorada y firme. Se puede disfrutar como acompañamiento o plato principal.",
-            vegano: false
-        },
-        {
-            nombre: "Alfajores",
-            ingredientes: ["Harina", "Maicena", "Dulce de leche", "Coco rallado", "Azúcar impalpable"],
-            descripcion: "Los alfajores son una delicia dulce muy popular en Argentina. Se preparan con una masa de harina y maicena, se rellenan con dulce de leche y se espolvorean con coco rallado o azúcar impalpable. Hay diferentes variedades y marcas de alfajores, pero todos son irresistibles.",
-            vegano: false
-        }
-    ];
-
     const btnMenuNavegacion=document.querySelector("#btnNavDesplegable");
-    
-    const formularioDeContacto = document.querySelector("#formularioContacto");
-    const btnEnviarForm= document.querySelector("#btnEnviarForm");
-    
-    
-    const btnGenerarCaptcha=document.querySelector("#btnGenerarCaptcha");
-    const alertaCaptcha= document.querySelector("#alertaCaptcha");
-    const inputCaptcha = document.querySelector("#inputCaptchaIngresado");
-    const layoutCaptcha = document.querySelector("#captcha");  
-    
-    const valoresCaptcha= ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0'];
-    const cantidadCaracteresCaptcha=6; // (coincidir maxlength del input)
-    let valorCaptcha='';
-    
-    
-    const contenedorFormTabla= document.querySelector("#contenedorFormTabla");
-    const contenedorTabla=document.querySelector("#contenedorTabla");
-    const maximoRecetasAgregadas= 5;
-    let arregloRecetasUsuario= [];
-    let arregloIngredientes=obtenerIngredientesPosibles();
-    
-    
-    
-    function crearFormularioDeTabla(contenedorForm) {
-        if(contenedorForm){
-            let cantidadDeSelects=2;
-            let formularioDeTabla= document.createElement("form");
-            let contenedorBotones= document.createElement("div");
-            
-            contenedorBotones.classList='contenedor-botones-form-tabla';
-            formularioDeTabla.id="formularioDeTabla";
-            formularioDeTabla.addEventListener("submit", editarTabla);
-            
-            for(let i = 1; i <= cantidadDeSelects; i++){
-                formularioDeTabla.appendChild(crearLabelDeIngredientes(i));
-                agregarSelectsIngredientes(formularioDeTabla);
-            }
-            
-            contenedorBotones.appendChild(crearBoton("Mostrar recetas", "mostrarRecetas"));
-            contenedorBotones.appendChild(crearBoton("Generar aleatorio", "generarAleatorio"));
-            contenedorBotones.appendChild(crearBoton("Vaciar tabla", "vaciarTabla"));
-            
-            formularioDeTabla.appendChild(contenedorBotones);
-            contenedorForm.appendChild(formularioDeTabla);
-            
-        }
-    }
-    
-    
-    function editarTabla(e) {
-        e.preventDefault()
-        
-        let ingredientesIngresados=obtenerIngredientesIngresados(e.target); //obtiene los ingredientes que agrega el usuario mediante selects
-        console.log(e.submitter.id);
-        if(e.submitter.id == "mostrarRecetas"){
-            eliminarElementosDuplicados(ingredientesIngresados);
-            agregarRecetasUsuario(ingredientesIngresados);
-        }else if(e.submitter.id == "vaciarTabla"){
-            vaciarTabla();
-        }else{
-            generarRecetasAleatorias();
-        }
-        
-    }
+    checkearSeccionEnNav("inicio");
+    renderContenidoDeSeccion("inicio");
+    renderNav();
+    generarMenuResponsive();
 
-    function generarRecetasAleatorias() {
-        const cantidad= 3;
-
-        for(let i=0 ; i < cantidad; i++){
-            let ingrediente= arregloIngredientes[Math.floor(Math.random()*arregloIngredientes.length)];
-            agregarRecetasUsuario([ingrediente]);
-        }
-    }
-    
-    function vaciarTabla() {
-        contenedorTabla.innerHTML='';
-        arregloRecetasUsuario=[];
-        document.querySelector("#contenedorRecetasUsuario").innerHTML='';
-    }
-
-    /*esto guarda la cantidad de ingredientes que ingresa el usuario(por si se agregan mas selects) y se empieza a recorrer las recetas que hay con foco al arreglo de ingredientes, si se encuentran todos los ingredientes que ingreso el usuario en alguna de las recetas, se guarda en la matriz que formara la tabla*/ 
-    function agregarRecetasUsuario(ingredientesIngresados) {
-        let cantidadIngredientesAIngresar= ingredientesIngresados.length;
-        let recetasEncontradas=[]
-        
-        for(let i= 0; i < arregloComidas.length; i++){
-            let ingredientesEncontrados=0;              
-            
-            for(let j = 0; j < ingredientesIngresados.length; j++){
-                if(arregloComidas[i].ingredientes.includes(ingredientesIngresados[j])){
-                    ingredientesEncontrados++;
-                }
-            }
-            if(cantidadIngredientesAIngresar == ingredientesEncontrados){
-                recetasEncontradas.push(arregloComidas[i]);
-            }
-        }
-        if(recetasEncontradas.length > 0){
-            if(arregloRecetasUsuario.length <= maximoRecetasAgregadas){
-                arregloRecetasUsuario.unshift([recetasEncontradas, ingredientesIngresados]);
-            }else{
-                arregloRecetasUsuario=agregarAlComienzoArr(arregloRecetasUsuario,[recetasEncontradas,ingredientesIngresados]);
-                console.log(arregloRecetasUsuario);
-            }
-            mostrarTabla(arregloRecetasUsuario);
-        }else{
-            mostrarAlertaSinResultados();
-        }
-        
-    }
-    
-    function mostrarTabla(arregloRecetas) {
-        let encabezados=["Resultados", "Ingredientes"];
-        let tabla=document.createElement("table");
-        
-        contenedorTabla.innerHTML=''
-        tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
-        contenedorTabla.appendChild(tabla);
-        
-        for (let i = 0; i < arregloRecetas.length; i++) {
-            let body=document.createElement("tbody");
-            let fila = document.createElement("tr");
-            if(i == 0){
-                fila.innerHTML+=`<td><span class="estilo-primer-fila">new</span><button class="estilos-btn-tabla" value="${i}" id="btnTabla${i}">${arregloRecetas[i][0].length} resultados</button></td> <td>${arregloRecetas[i][1]}</td>`;
-            }else{
-                fila.innerHTML+=`<td><button class="estilos-btn-tabla" value="${i}" id="btnTabla${i}">${arregloRecetas[i][0].length} resultados</button></td> <td>${arregloRecetas[i][1]}</td>`;
-            }
-            body.appendChild(fila);
-            tabla.appendChild(body);
-            document.querySelector(`#btnTabla${i}`).addEventListener("click", mostrarRecetas);
-        }
-        
-        
-    }
-    
-    function mostrarRecetas(e) {
-        const contenedorRecetas=document.querySelector("#contenedorRecetasUsuario");
-        let valueBotonClickeado=parseInt(e.target.value);
-        let resultadosDeRecetasSeleccionados=arregloRecetasUsuario[valueBotonClickeado][0]; //en [valueBotonBlickeado][1] estaria los ingredientes que ingreso
-        
-        contenedorRecetas.innerHTML='';
-        
-        resultadosDeRecetasSeleccionados.forEach(receta =>{
-            let nuevoArticulo=document.createElement("article");
-            nuevoArticulo.innerHTML+=`<h2>${receta.nombre}</h2>
-            <h5>Ingredientes: ${receta.ingredientes}.</h5>
-            <p>${receta.descripcion}</p>`
-            contenedorRecetas.appendChild(nuevoArticulo)
-        })
-        
-    }
-    
-    function mostrarAlertaSinResultados() {
-        let alerta= document.createElement("p");
-        alerta.id='alertaSinResultados'             //crea un alerta formato P
-        alerta.textContent="No hay resultados para la combinacion de ingredientes.";    //con este texto por defecto
-        
-        if(document.querySelector("#alertaSinResultados") == null){ //si no esta en el arbol de nodos, la agrega
-            contenedorFormTabla.appendChild(alerta);
-        }else{
-            document.querySelector("#alertaSinResultados").textContent="No hay resultados para la combinacion de ingredientes."; //si ya fue agregada, vuelve a mostrar el texto default
-            
-        }
-        //luego de la alerta ser agregada con texto default o modificado su contenido, se vacia
-        setTimeout(() => {
-            document.querySelector("#alertaSinResultados").textContent='';
-        }, 2800);  
-    }
-    
-    function agregarAlComienzoArr(arreglo, elemento) {
-        for(let i= arreglo.length-1; i>=0 ;i--){
-            if(i != 0){
-                arreglo[i]= arreglo[i-1];
-            }else{
-                arreglo[i]= elemento;
-            }
-        }
-        return arreglo
-    }
-    
-    function obtenerIngredientesIngresados(targetFormulario) {
-        let arregloValores=[];
-        for (const contenidoForm of targetFormulario) {          //esto recorre cada elemento que contiene el form y si encuentra un select guarda su valor en un arreglo, una vez que encuentra los valores de todos los select retorna el arreglo
-            if(contenidoForm.tagName == "SELECT"){
-                arregloValores.push(contenidoForm.value)
-            }
-        }
-        
-        return arregloValores;
-    }
-    
-    function crearBoton(nombre, id) {
-        let boton = document.createElement("button");
-        boton.textContent=`${nombre}`;
-        boton.id=`${id}`;
-      
-        return boton;
-    }
-    
-    function crearLabelDeIngredientes(nombre) {
-        let label= document.createElement("label");
-        label.textContent=`Ingrediente ${nombre}`;
-        
-        return label; 
-    }
-    
-    function agregarSelectsIngredientes(formularioContenedor) {
-        let select= document.createElement("select");
-        
-        
-        arregloIngredientes.forEach(e=>{
-            let option = document.createElement("option");
-            option.value=`${e}`;
-            option.textContent=`${e}`;
-            select.appendChild(option);
-        });
-        
-        formularioContenedor.appendChild(select);
-    }
-    
-    function obtenerIngredientesPosibles() {
-        let arregloIngredientes=[]
-        for(let i =0 ; i < arregloComidas.length;i++){
-            arregloComidas[i].ingredientes.forEach(e => {         //recorre cada elemento del arregloComidas y se enfoca en los arreglos de ingredientes, por cada elemento del arreglo de ingredientes, lo pushea al arreglo de ingredientes 
-                arregloIngredientes.push(e);
-            });
-        }
-        
-        eliminarElementosDuplicados(arregloIngredientes);
-        
-        return arregloIngredientes;
-    }
-    
-    
-    function eliminarElementosDuplicados(arreglo) {
-        for(let i = 0; i < arreglo.length; i++){       //recorre todo el arreglo de ingredientes y compara cada ingrediente(i) con todos los demas(j), si encuentra q el ingrediente (i) es igual al ingrediente (j), remueve son splice "1" elemento a partir de la posicion j
-            for(let j = i+1; j < arreglo.length;j++){
-                if(arreglo[i] == arreglo[j]){
-                    arreglo.splice(j,1);
-                }
-            }
-        }
-    }
-    
-    
-    /*//////////////////////////////////////////FUNCIONES DE LA SECCION INICIO///////////////////////////////////////////////////////////////////////// */
-    
-    function eventosSeccionInicio(formularioContacto) {
-        if(formularioContacto){
-            formularioContacto.addEventListener("submit", enviarFormulario); //escucha el envio del formulario
-            btnGenerarCaptcha.addEventListener("click", mostrarCaptcha);    //esto hace que se muestre y genere un nuevo captcha al hacer click en el boton 🔄
-            inputCaptcha.addEventListener("input",verificarCaptchaIngresado); //se mantiene "escuchando" cuando el usuario cambia el valor del input donde debe ingresar el captcha
-            inputCaptcha.addEventListener("blur",verificarCaptchaIngresado); //se puede utilizar blur tambien para lo anterior(cambia detalles)
-            document.addEventListener("DOMContentLoaded", mostrarCaptcha)
-        }
-        
-    }
-    
-    
-    function enviarFormulario(e){   //se ejecuta cuando se hace click en el boton ENVIAR del formulario
-        e.preventDefault();
-        
-        let formData= new FormData(formularioDeContacto);   /*Captura/genera entre otros: "entries" obj {[nameDelInput:"valor"], ...} */
-        let valoresEnInputs=[];
-        let conjuntosClaveValor=[];
-        for (let claveValorInput of formData.entries()) { 
-            /* for of itera cualquier dato(string,obj,array) */
-            /*claveValorInput en cada iteracion vale un array de 2 elementos ["name del input", "valor"] */
-            conjuntosClaveValor.push(claveValorInput); /*   SE PUEDEN USAR LOS DATOS COMO MATRIZ CLAVE-VALOR*/
-            valoresEnInputs.push(claveValorInput[1]); /*utilizando el metodo push guardo cada valor de cada input(name,valor) iterado */
-        }  /*claveValorInput[1] valdra en cada iteracion el valor que toma del input. En su posicion [0] el name que toma ese input*/
-        
-        console.log(conjuntosClaveValor);
-        console.log(valoresEnInputs);  //OBTIENE LOS DATOS
-        vaciarFormulario(e);       //VACIA EL FORMULARIO
-        
-    }
-    
-    //esto crea nodo donde ira el captcha y cada vez que es llamado, llama a un metodo que genera un nuevo captcha
-    function mostrarCaptcha() { 
-        
-        valorCaptcha=obtenerCaptcha();          //esto permite que siempre valorCaptcha sea aleatorio
-        
-        layoutCaptcha.innerHTML='';
-        layoutCaptcha.innerHTML+=`${valorCaptcha}`;     //escribe en el parrafo layoutCaptcha el captcha aleatorio
-        
-    };
-    
-    //crea y retorna un string de X(cantidadCaracteresCaptcha) cantidad de caracteres a partir del array de caracteres.tomando caracteres de ese array aleatoriamente
-    function obtenerCaptcha() {
-        let captcha='';
-        for(let i=0; i < cantidadCaracteresCaptcha; i++){  
-            captcha+=valoresCaptcha[Math.floor(Math.random()*valoresCaptcha.length)];
-        }
-        
-        return captcha;
-    }
-    
-    function verificarCaptchaIngresado(e) {
-        let valorInputCaptcha=e.target.value; //obtiene el valor del input del captcha cuando se ejecuta evento input/blur 
-        alertaCaptcha.innerHTML='';
-        
-        //compara el valor del input con la variable GLOBAL valorCaptcha y responde mediante el parrafo alertaCaptcha(NODO CAPTURADO GLOBAL)
-        if(valorInputCaptcha == valorCaptcha){
-            mostrarElemento(btnEnviarForm);
-            alertaCaptcha.innerHTML="Captcha ingresado valido ✅";
-            
-        }else{
-            ocultarElemento(btnEnviarForm);
-            alertaCaptcha.innerHTML="Captcha invalido ❌";
-        }
-        
-    }
-    
-    function vaciarFormulario(data) {
-        for(let i=0 ; i < data.target.length; i++){
-            if(data.target[i].tagName == "INPUT" || data.target[i].tagName == "TEXTAREA"){  //vacia cada input ó textarea q encuentra del form
-                data.target[i].value='';
-            }      
-        }
-        mostrarCaptcha();                                            //muestra y genera otro captcha aleatorio                                                   
-        ocultarElemento(btnEnviarForm);                              //oculta el boton de enviar
-        alertaCaptcha.innerHTML='';                                  //vacia la alerta del captcha
-    }
-    
-    function ocultarElemento(nodoDelElemento) {
-        nodoDelElemento.classList.remove("d-activo");
-        nodoDelElemento.classList.add("d-none");
-    }                                                                //se le pasa un nodo capturado con querySelector y le cambia la clase hecha en css
-    function mostrarElemento(nodoDelElemento) {
-        nodoDelElemento.classList.remove("d-none");
-        nodoDelElemento.classList.add("d-activo");
-    }
-    
-    /*////////////////////////////////////////////FUNCION MENU RESPONSIVE///////////////////////////////////////////////////////////////// */
     function generarMenuResponsive() {
         btnMenuNavegacion.addEventListener("click", mostrarMenuResposive);
         
@@ -477,11 +31,575 @@ function main() {
         }
         
     }
+
+}
+
+function renderNav() {
+    let seccionesNav= document.querySelectorAll(".navegacion");     //toma del DOM los items de navegacion
+    seccionesNav.forEach(e => {
+        e.addEventListener("click", evento=> renderElementosDeSeccion(evento)); //se asigna evento click a cada uno de los items de la nav, llamando a la funcion renderElementosSeccion
+    })
+}
+
+//se encarga de renderizar en el document los elementos propios de cada seccion: url, titulo y contenido;
+function renderElementosDeSeccion(e) {
+    let idSeccion= e.target.id; //se captura el id del elemento de navegacion donde se hizo click
+    window.history.pushState({idSeccion}, `${idSeccion}`, `/${idSeccion}`);    //modifica la url
     
-    generarMenuResponsive()
-    crearFormularioDeTabla(contenedorFormTabla);
-    eventosSeccionInicio(formularioDeContacto);
-    mostrarCaptcha();
+    checkearSeccionEnNav(idSeccion);    //checkea el item nav de acuerdo al id
+    
+    if(idSeccion === "tabla"){
+        document.title=`${capitalizarTexto(idSeccion)} Magica / BooM`;
+    }else{                                    //actualiza el titulo del sitio de acuerdo al id
+        document.title=`${capitalizarTexto(idSeccion)} / BooM`;
+    }
+    
+    renderContenidoDeSeccion(idSeccion);    // muestra el contenido de acuerdo al id/seccion q se selecciona
+    
+}
+
+//checkea visualmente el item de la nav donde se hizo click (donde se está parado)
+function checkearSeccionEnNav(idSeccionSeleccionada) {
+    document.querySelectorAll(".navegacion").forEach((item)=> item.classList.remove("seccion-selec"));
+    document.querySelectorAll(`#${idSeccionSeleccionada}`).forEach((item)=>item.classList.add("seccion-selec"));
+}
+
+///////////funcion controladora de secciones
+function renderContenidoDeSeccion(idSeccionSeleccionada) {
+    let contenedor= document.querySelector("#main");
+    contenedor.innerHTML=' ';
+    contenedor.innerHTML+=`<div class="contenedor-spinner">
+                            <p>Cargando...</p>
+                           </div>`;
+
+
+    if(idSeccionSeleccionada == "inicio"){
+        inicializarInicio();
+    }else if(idSeccionSeleccionada == "cocktails" || idSeccionSeleccionada == "comidas"){
+        let paginacionDeInicio=1;
+        inicializarSeccionListas(idSeccionSeleccionada, paginacionDeInicio);
+    }else if(idSeccionSeleccionada == "tabla"){
+        inicializarSeccionTabla();
+    }else{
+        console.log("render error");
+        inicializarError();
+    }
+}
+
+
+
+/////funcion controladora seccion coctails y recetas
+async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio) {  
+    /*se podria llamar al spinner aqui */
+    const cantidadItemsPagina=8;
+    const contenedor=document.querySelector("#main");
+    let arregloRecetasFiltrado= await obtenerListaParcialRecetasApi(paginacionDeInicio,cantidadItemsPagina,seccionSeleccionada);
+    let arregloBusqueda= await obtenerRecetasPorSeccionApi(seccionSeleccionada);
+    contenedor.innerHTML=``;
+    
+    if(arregloRecetasFiltrado && arregloBusqueda){
+        const minPaginas=1;  
+        let contenedorPaginacion=document.createElement("div");      
+        let btnBusqueda= document.createElement("button");
+        let btnSiguiente= document.createElement("button");
+        let btnAnterior=document.createElement("button");
+        let txtPaginacion=document.createElement("p");
+        let inputBusqueda= iniciarInputDeBusqueda("text", 30, `Busca tu ${seccionSeleccionada}/ingredientes`, "inputBusqueda");
+        
+        contenedorPaginacion.classList.add("contenedor-paginacion");
+        btnSiguiente.textContent="Siguiente🔜";
+        btnAnterior.textContent="Anterior🔙";
+        btnBusqueda.textContent="🔍";
+        btnBusqueda.classList.add("btn-busqueda-recetas")
+        txtPaginacion.textContent=`- ${paginacionDeInicio} -`;
+        btnBusqueda.addEventListener("click", ()=>{
+            buscarRecetas(arregloBusqueda)
+        });
+        contenedor.innerHTML+=`<h2>${capitalizarTexto(seccionSeleccionada)}</h2>`;
+        contenedor.appendChild(inputBusqueda);
+        contenedor.appendChild(btnBusqueda);
+        
+        contenedorPaginacion.appendChild(btnAnterior)
+        contenedorPaginacion.appendChild(txtPaginacion);
+        contenedorPaginacion.appendChild(btnSiguiente)
+        contenedor.appendChild(contenedorPaginacion);
+        
+        
+        if(arregloRecetasFiltrado.length == cantidadItemsPagina){ /*SI LA API ESTA TRAYENDO DE A 8 (cantidadItemsPagina),segui habilitando el evento para q traiga mas paginas */
+        btnSiguiente.addEventListener("click", ()=>{
+            avanzarSeccion(seccionSeleccionada, paginacionDeInicio);
+        })
+        }
+        if(paginacionDeInicio != minPaginas){ /*el minPaginas sirve para eventualmente no mostrar la pagina 1 y comenzar con minPaginas en 2 (tambien modificar variable "padre" paginacionDeInicio)*/
+        btnAnterior.addEventListener("click", ()=>{         
+            retrocederSeccion(seccionSeleccionada, paginacionDeInicio);
+        })
+        }
+        
+        renderizarLista(arregloRecetasFiltrado);
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        function iniciarInputDeBusqueda(tipo, maxlen, pholder,id ) {
+            let input = document.createElement("input");
+            
+            input.type=tipo;
+            input.maxLength=maxlen;
+            input.placeholder=pholder;
+            input.id=id;
+            
+            return input;
+        }
+        function avanzarSeccion(seccion,pagina) {
+            pagina=pagina+1;
+            inicializarSeccionListas(seccion,pagina);
+            
+        }
+        function retrocederSeccion(seccion,pagina) {
+            pagina= pagina-1;
+            inicializarSeccionListas(seccion,pagina);
+        }
+        
+        function buscarRecetas(arregloDeBusqueda) {
+            let valorInputBusqueda= document.querySelector("#inputBusqueda").value.toLowerCase().trim();
+            let recetasEncontradas=[];
+            
+            if(valorInputBusqueda != ''){
+                arregloDeBusqueda.forEach(receta => {
+                    if(receta.nombre.toLowerCase().includes(valorInputBusqueda)){
+                        recetasEncontradas.push(receta);
+                    }
+                    receta.ingredientes.forEach(ingrediente => {
+                        if(ingrediente.toLowerCase().includes(valorInputBusqueda) && !recetasEncontradas.includes(receta)){     /*esto por si el algun ingrediente tambien esta en el nombre principal */
+                        recetasEncontradas.push(receta);
+                        }
+                    })
+                
+                })
+                renderizarLista(recetasEncontradas);
+            }   
+        
+        }
+    }else{
+        inicializarError();
+    }   
+}
+
+
+
+/////funcion controladora seccion tabla magica
+async function inicializarSeccionTabla() {
+    const contenedor=document.querySelector("#main");
+    const maximoConsultasRecetas= 7;
+    let arregloRecetasUsuario= [];
+    let arregloIngredientes= await obtenerIngredientesPosiblesApi();
+    
+    contenedor.innerHTML='';
+    contenedor.innerHTML+=`
+    <h2>Tabla Magica</h2>
+    <h4>¡Ingresa 2 ingredientes que tengas en tu casa y te recomendamos recetas!</h4>`;
+    crearFormularioSeccionTabla();
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    function crearFormularioSeccionTabla() {
+        const cantidadDeSelects=2;
+        let formulario= document.createElement("form");
+        let contenedorBotones= document.createElement("div");
+        
+        contenedorBotones.classList='contenedor-botones-form-tabla';
+        formulario.id="formularioDeTabla";
+        formulario.addEventListener("submit", inicializarTabla);
+        
+        for(let i = 1; i <= cantidadDeSelects; i++){
+            formulario.appendChild(crearLabelDeIngredientes(i));
+            agregarSelectsIngredientes(formulario);
+        }
+        
+        contenedorBotones.appendChild(crearBoton("Mostrar recetas", "mostrarRecetas"));
+        contenedorBotones.appendChild(crearBoton("Generar aleatorio", "generarAleatorio"));
+        contenedorBotones.appendChild(crearBoton("Vaciar tabla", "vaciarTabla"));
+        
+        formulario.appendChild(contenedorBotones);
+        contenedor.appendChild(formulario);
+        /////////////////////////////////////////////////////
+        
+        function agregarSelectsIngredientes(form) {
+            let select= document.createElement("select");
+            
+            arregloIngredientes.forEach(e=>{
+                let option = document.createElement("option");
+                option.value=`${e}`;
+                option.textContent=`${e}`;
+                select.appendChild(option);
+            });
+            
+            form.appendChild(select);
+        }
+        
+        function crearLabelDeIngredientes(nombre) {
+            let label= document.createElement("label");
+            label.textContent=`Ingrediente ${nombre}`;
+            
+            return label; 
+        }
+        
+        function crearBoton(nombre, id) {
+            let boton = document.createElement("button");
+            boton.textContent=`${nombre}`;
+            boton.id=`${id}`;
+            
+            return boton;
+        }
+    }
+    
+    function inicializarTabla(e) {
+        e.preventDefault()
+        let ingredientesIngresados=obtenerIngredientesIngresados(e.target); //obtiene los ingredientes que agrega el usuario mediante selects
+        
+        if(e.submitter.id == "mostrarRecetas"){
+            eliminarElementosDuplicados(ingredientesIngresados);
+            obtenerRecetasRecomendadasUsuario(ingredientesIngresados);
+        }else if(e.submitter.id == "vaciarTabla"){
+            vaciarTabla();
+        }else{
+            generarRecetasAleatorias();
+        }
+        
+        /////////////////////////////////////////////////////////////////
+
+        function obtenerIngredientesIngresados(targetFormulario) {
+            let arregloValores=[];
+            for (const contenidoForm of targetFormulario) {          //esto recorre cada elemento que contiene el form y si encuentra un select guarda su valor en un arreglo, una vez que encuentra los valores de todos los select retorna el arreglo
+                if(contenidoForm.tagName == "SELECT"){
+                    arregloValores.push(contenidoForm.value)
+                }
+            }
+            
+            return arregloValores;
+        }
+        
+        
+        async function obtenerRecetasRecomendadasUsuario(ingredientesUsuario) {
+            let url = new URL('https://649cbbcd048075719238782f.mockapi.io/api/recetas');
+            let recetasEncontradas=[]
+            try {
+                let promesa= await fetch(url);
+                let data= await promesa.json();
+                if(promesa.ok){
+                    data.forEach(receta=>{
+                        receta.ingredientes.forEach(ingrediente =>{
+                            ingredientesUsuario.forEach(ingredienteUsuario =>{
+                                if(ingrediente.toLowerCase() === ingredienteUsuario.toLowerCase() && !recetasEncontradas.includes(receta)){
+                                    recetasEncontradas.push(receta);
+                                }
+                            })
+                        })
+                    })  /*EN ESTE CASO SIEMPRE SE ENCUENTRA AL MENOS UNA RECETA */
+                    if(arregloRecetasUsuario.length < maximoConsultasRecetas){
+                        arregloRecetasUsuario.unshift({"recetas":recetasEncontradas, "ingredientes":ingredientesUsuario});
+                    }else{
+                        arregloRecetasUsuario=agregarAlComienzoArr(arregloRecetasUsuario,{"recetas":recetasEncontradas, "ingredientes":ingredientesUsuario});
+                    }
+                    renderizarTabla(arregloRecetasUsuario);
+                }else{
+                    console.log("error sintaxis");
+                }
+                
+            } catch (error) {
+                console.log("error fetch");
+            }
+            return null;  
+            
+        }
+        
+        function renderizarTabla(arregloRecetasUsuario) {
+            let encabezados=["Resultados", "Ingredientes"];
+            let tabla='';
+            let body=document.createElement("tbody");
+            
+            if(document.querySelector("#tablaRecetas")){
+                tabla= document.querySelector("#tablaRecetas");
+                tabla.innerHTML='';
+                if(arregloRecetasUsuario.length > 0){
+                    tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
+                    tabla.appendChild(body);
+                }
+                
+            }else{
+                tabla=document.createElement("table");
+                tabla.id="tablaRecetas";
+                tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
+                tabla.appendChild(body)
+                contenedor.appendChild(tabla);
+            }
+            
+            
+            for (let i = 0; i < arregloRecetasUsuario.length; i++) {
+                let fila = document.createElement("tr");
+                if(i === 0){
+                    fila.innerHTML+=`<td><span class="estilo-primer-fila">new</span><button class="estilos-btn-tabla btn-tabla" id="btnResultadosTabla${i}">${arregloRecetasUsuario[i]["recetas"].length} resultados</button></td><td>${arregloRecetasUsuario[i]["ingredientes"]}</td> <button value="${i}" id="btnEliminar${i}">❌</button>`;
+                }else{
+                    fila.innerHTML+=`<td><button class="estilos-btn-tabla btn-tabla" id="btnResultadosTabla${i}">${arregloRecetasUsuario[i]["recetas"].length} resultados</button></td><td>${arregloRecetasUsuario[i]["ingredientes"]}</td><button value="${i}"  id="btnEliminar${i}">❌</button>`;
+                }
+                body.appendChild(fila);
+                document.querySelector(`#btnResultadosTabla${i}`).addEventListener("click",()=>{renderizarLista(arregloRecetasUsuario[i]["recetas"])});
+                document.querySelector(`#btnEliminar${i}`).addEventListener("click", (e)=> {
+                    arregloRecetasUsuario.splice(i, 1);
+                    renderizarTabla(arregloRecetasUsuario);
+                    if(document.querySelector("#listaRecetas")){
+                        document.querySelector("#listaRecetas").innerHTML='';
+                    }
+                });
+                
+            }   
+        }
+
+        function generarRecetasAleatorias() {
+            const cantidad= 3;
+            
+            for(let i=0 ; i < cantidad; i++){
+                let ingrediente= arregloIngredientes[Math.floor(Math.random()*arregloIngredientes.length)];
+                obtenerRecetasRecomendadasUsuario([ingrediente]);
+            }
+        }
+        
+        function vaciarTabla() {
+            if(document.querySelector("#tablaRecetas")){
+                document.querySelector("#tablaRecetas").innerHTML='';
+            }
+            if(document.querySelector("#listaRecetas")){
+                document.querySelector("#listaRecetas").innerHTML=''
+            }
+            arregloRecetasUsuario=[];
+        }
+        
+    }
+    
+    async function obtenerIngredientesPosiblesApi(){
+        let url = new URL('https://649cbbcd048075719238782f.mockapi.io/api/recetas');
+        let arregloIngredientes=[];
+        try {
+            let promesa= await fetch(url);
+            let data= await promesa.json();
+            if(promesa.ok){
+                data.forEach(receta=>{
+                    receta.ingredientes.forEach(ingrediente =>{
+                        if(!arregloIngredientes.includes(ingrediente)){
+                            arregloIngredientes.push(ingrediente);
+                        }
+                    })
+                })
+                return arregloIngredientes;
+            }else{
+                console.log("error sintaxis");
+            }
+            
+        } catch (error) {
+            console.log("error fetch");
+        }
+        return null;  
+    }
+}
+
+
+////////funcion controladora seccion inicio
+async function inicializarInicio() {
+    const cantidadImgsInicio=3;
+    let contenedor= document.querySelector("#main");
+    let captcha=obtenerCaptchaAleatorio();
+    let arregloImgsRecetas= await obtenerElementosApi(cantidadImgsInicio);
+    
+    if(arregloImgsRecetas){  /*por principio de falsy, si devuelve null esto sera falso */
+        contenedor.innerHTML='';
+        crearTarjetasImgs(arregloImgsRecetas, contenedor);
+        crearFormularioContacto(contenedor);
+        ////////////////////////////////////////////////////////////////////////////////////////
+
+        function crearTarjetasImgs(arrInformacion, contenedor) {
+            let seccion= document.createElement("section");
+            seccion.classList.add("tarjetas-inicio");
+            for (let i = 0; i < arrInformacion.length; i++) {
+                let contenedorTarjeta= document.createElement("article");
+                if(i == 0){
+                    contenedorTarjeta.style.backgroundImage= `url('../imgs/sorrentinos-tricolor.jpg')`;
+                }else if(i == 1){
+                    contenedorTarjeta.style.backgroundImage= `url('../imgs/real-burger.jpg')`;
+                }else{
+                    contenedorTarjeta.style.backgroundImage= `url('../imgs/cocktail-red.jpg')`;
+                }
+
+                contenedorTarjeta.innerHTML+=`<div class="texto-articulo">
+                <h2>${arrInformacion[i].nombre}</h2>
+                </div>`;
+                contenedorTarjeta.addEventListener("click", ()=>{
+                    mostrarReceta(arrInformacion[i]);
+                });
+                seccion.appendChild(contenedorTarjeta);
+            }
+            contenedor.appendChild(seccion)
+        }
+
+        function crearFormularioContacto(contenedor) {
+            const inputsForm=["nombre", "email", "descripcion","captcha"];
+            const idCampos="contacto";
+            let formulario= document.createElement("form");
+            let parrafoCaptcha=document.createElement("p");
+            let alertaCaptcha=document.createElement("p");
+            let tituloCaptcha=document.createElement("h2");
+            let subtituloCaptcha=document.createElement("h4");
+            tituloCaptcha.innerHTML="Contacta con nosotros";
+            subtituloCaptcha.innerHTML="Envianos tu receta o danos tu opinion de nuestro servicio."
+            
+            formulario.classList.add("formulario-contacto");
+            formulario.id="formContacto";
+            formulario.addEventListener("submit",enviarFormulario);
+            alertaCaptcha.id='alertaCaptcha';
+            parrafoCaptcha.id="layoutCaptcha";
+            parrafoCaptcha.innerHTML=`Captcha: ${captcha}`;
+            formulario.appendChild(tituloCaptcha);
+            formulario.appendChild(subtituloCaptcha);
+            inputsForm.forEach(elemento =>{
+                
+                if(elemento != 'descripcion'){
+                    let input = crearInput(elemento,idCampos);
+                    formulario.appendChild(input);
+                    
+                }else{
+                    let txtArea=document.createElement("textarea");
+                    txtArea.placeholder="Escribinos tu consulta.";
+                    txtArea.required=true;
+                    txtArea.rows=10;
+                    txtArea.maxLength=250;
+                    formulario.appendChild(txtArea);
+                }
+            })
+            formulario.appendChild(parrafoCaptcha)
+            formulario.appendChild(alertaCaptcha);
+            contenedor.appendChild(formulario);
+
+            ///////////////////////////////////////////////
+
+            function crearInput(tipoInput,identificador) {
+                let input = document.createElement("input");
+                input.classList.add(`input-${identificador}`);
+                input.name=tipoInput;
+                input.required=true;
+                
+                if(tipoInput == "nombre"){
+                    input.type="text";
+                    input.maxLength=20;
+                    input.placeholder="Ingrese su nombre";
+                }
+                if(tipoInput == "email"){
+                    input.type="email"
+                    input.maxLength=30;
+                    input.placeholder="Ingrese su e-mail";
+                }
+                if(tipoInput == "captcha"){
+                    input.type="text";
+                    input.id="captchaContacto"
+                    input.maxLength=6;
+                    input.placeholder="Ingrese captcha";
+                    input.addEventListener("input",verificarCaptcha); //se mantiene "escuchando" cuando el usuario cambia el valor del input donde debe ingresar el captcha
+                    input.addEventListener("blur",verificarCaptcha); //se puede utilizar blur tambien para lo anterior(cambia detalles)
+                    
+                }
+                return input;
+            }
+        }
+
+        function verificarCaptcha() {
+            let captchaIngresado=document.querySelector("#captchaContacto").value;
+            let formulario=document.querySelector("#formContacto");
+            let alertaCaptcha=document.querySelector("#alertaCaptcha");
+            let btnEnvioForm=document.querySelector(".btn-form-contacto");
+            alertaCaptcha.innerHTML='';
+            
+            if(captchaIngresado === captcha){
+                alertaCaptcha.innerHTML="Captcha ingresado correctamente.";
+                
+                if(!btnEnvioForm){
+                    let btnEnviar=document.createElement("button");
+                    btnEnviar.classList.add("btn-form-contacto");
+                    btnEnviar.textContent="Enviar";
+                    btnEnviar.type="submit";
+                    formulario.appendChild(btnEnviar);
+                }else{
+                    btnEnvioForm.classList.remove("d-none");
+                    btnEnvioForm.classList.add("d-flex");
+                }
+            }else{
+                alertaCaptcha.innerHTML="Captcha ingresado invalido.";
+                if(btnEnvioForm){
+                    btnEnvioForm.classList.remove("d-flex");
+                    btnEnvioForm.classList.add("d-none");
+                }
+            }
+        }
+
+        function enviarFormulario(e) {
+            e.preventDefault();
+            let formulario=document.querySelector("#formContacto");
+            let alertaCaptcha=document.querySelector("#alertaCaptcha");
+
+            alertaCaptcha.innerHTML="Consulta enviada correctamente!";
+            setTimeout(() => {
+                alertaCaptcha.innerHTML='';
+            }, 2000);
+            document.querySelector(".btn-form-contacto").classList.add("d-none");
+            formulario.reset();
+            captcha=obtenerCaptchaAleatorio();
+            document.querySelector("#layoutCaptcha").innerHTML=`Captcha: ${captcha}`;
+        }  
+    }else{
+        inicializarError()
+    }
+    
+    function obtenerCaptchaAleatorio() {
+        const valoresCaptcha= ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0'];
+        const cantidadCaracteresCaptcha=6; // (coincidir maxlength del input)
+        let captcha='';
+        for(let i=0; i < cantidadCaracteresCaptcha; i++){  
+            captcha+=valoresCaptcha[Math.floor(Math.random()*valoresCaptcha.length)];
+        }
+        return captcha;  
+    }
+    
+
+}
+///////////////////////////////////////////////////////////FUNCIONES PARA TODO EL SITIO////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+function inicializarError() {
+    let contenedor = document.querySelector("#main");
+    contenedor.innerHTML='';
+    contenedor.innerHTML+=`<p>ups...</p>
+                        <h1>404 not found 😡</h1>`;
+
+}
+
+
+function mostrarReceta(receta) {
+    let id= receta.id;
+    let contenedor=document.querySelector("#main");
+    let articulo=document.createElement("article");
+    let seccionCheck=document.querySelector(".seccion-selec");
+    seccionCheck.classList.remove("seccion-selec");
+    contenedor.innerHTML='';
+    window.history.pushState({id}, `${id}`, `/receta/${id}`); 
+    document.title=`${receta.nombre} / BooM`;
+    articulo.classList.add("vista-receta");
+    articulo.innerHTML+=`<h2>${receta.nombre}</h2>
+                        <div class="contenedor-detalles-receta">
+                            <p>imgReceta🍕</p>
+                            <div class="texto-detalles-receta">
+                                <p>Ingredientes: ${receta.ingredientes}</p>
+                                <p>${receta.descripcion}</p>
+                            </div>
+                        </div>`;
+    contenedor.appendChild(articulo);
 }
 
 
@@ -489,28 +607,134 @@ function main() {
 
 
 
+function renderizarLista(arregloRecetas) {
+    
+    if(arregloRecetas.length > 0){
+        let existeListaEnDom=document.querySelector("#listaRecetas");  /*si no la encuentra valdra null*/
 
+        if(existeListaEnDom){
+            let lista= document.querySelector("#listaRecetas");
+            lista.innerHTML='';
+            arregloRecetas.forEach(receta=>{
+                lista.innerHTML+=`<article class="item-lista-recetas" id="receta${receta.id}"><h3>${receta.nombre}</h3>
+                <p>Ingredientes: ${receta.ingredientes}</p></article>`;
+                document.querySelector(`#receta${receta.id}`).addEventListener("click", ()=>{mostrarReceta(receta)});
+            });
+            
+        }else{
+            let contenedor=document.querySelector("#main");
+            let listaRecetas= document.createElement("section");
+            listaRecetas.id="listaRecetas";
+            
+            arregloRecetas.forEach(receta => {
+                let itemLista=document.createElement("article");
+                itemLista.classList.add("item-lista-recetas");
+                itemLista.id=`receta${receta.id}`;
+                itemLista.innerHTML+=`
+                <h3>${receta.nombre}</h3>
+                <p>Ingredientes: ${receta.ingredientes}</p>`;
+                itemLista.addEventListener("click", ()=>{ mostrarReceta(receta)});
+                listaRecetas.appendChild(itemLista); 
+            })
+            contenedor.appendChild(listaRecetas);
+        }
+        
+    }
+    
+}
 
+function eliminarElementosDuplicados(arreglo) {
+    for(let i = 0; i < arreglo.length; i++){       //recorre todo el arreglo de ingredientes y compara cada ingrediente(i) con todos los demas(j), si encuentra q el ingrediente (i) es igual al ingrediente (j), remueve son splice "1" elemento a partir de la posicion j
+        for(let j = i+1; j < arreglo.length;j++){
+            if(arreglo[i] == arreglo[j]){
+                arreglo.splice(j,1);
+            }
+        }
+    }
+}
 
+function agregarAlComienzoArr(arreglo, elemento) {
+    for(let i= arreglo.length-1; i>=0 ;i--){
+        if(i != 0){
+            arreglo[i]= arreglo[i-1];
+        }else{
+            arreglo[i]= elemento;
+        }
+    }
+    return arreglo;
+}
 
+function capitalizarTexto(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
 
+async function obtenerRecetasPorSeccionApi(seccion) {
+    let url = new URL('https://649cbbcd048075719238782f.mockapi.io/api/recetas');
+    url.searchParams.append("receta", seccion);
+    
+    try {
+        let promesa= await fetch(url);
+        let data= await promesa.json();
+        if(promesa.ok){
+            return data;
+        }else{
+            console.log("error sintaxis");
+        }
+        
+    } catch (error) {
+        console.log("error fetch");
+    }
+    
+    return null;
+    
+}
 
+async function obtenerListaParcialRecetasApi(numeroDePagina, cantidadItemsPagina,seccionSeleccionada){
+    let url = new URL('https://649cbbcd048075719238782f.mockapi.io/api/recetas');
+    url.searchParams.append("page", numeroDePagina);
+    url.searchParams.append("limit",cantidadItemsPagina);
+    url.searchParams.append("receta", seccionSeleccionada);
+    
+    try {
+        let promesa= await fetch(url);
+        let data= await promesa.json();
+        if(promesa.ok){
+            return data;
+        }else{
+            console.log("error sintaxis");
+        }
+        
+    } catch (error) {
+        console.log("error fetch");
+    }
+    
+    return null;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+async function obtenerElementosApi(cantidadElementos) {
+    let URL= `https://649cbbcd048075719238782f.mockapi.io/api/recetas`;
+    let elementosNecesarios=null; /*elementos necesarios se presume null para retornar null en caso de que no se encuentren resultados */
+    
+    try {
+        let promesa = await fetch(URL);
+        let data= await promesa.json();
+        if (promesa.ok) {
+            if(cantidadElementos != '*'){
+                elementosNecesarios= data.filter(recetas => recetas.id <= cantidadElementos )
+            }else{
+                elementosNecesarios=data;
+            }  
+            console.log("ok");
+        }else{
+            console.log("error sintaxis en la url 404");
+        }
+        
+    } catch (error) {
+        console.log(error);
+        console.log("error no se puede conectar con url fetch");
+        
+    }
+    return elementosNecesarios   
+}

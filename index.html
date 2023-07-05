@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./css/style.css" >
+    <link rel="shortcut icon" href="imgs/favicon-boom.jpg">
+    <link rel="stylesheet" type="text/css" href="css/style.css" >
     <title>Inicio / BooM</title>
 </head>
 <body>
@@ -15,47 +16,14 @@
         </div>
         <nav>
             <ul>
-                <li><a href="./index.html">Inicio</a></li>
-                <li><a href="./secciones/cocktails.html">Cocktails</a></li>
-                <li><a href="./secciones/recetas.html">Recetas</a></li>
-                <li><a href="./secciones/tabla-recetas.html">Tabla Magica</a></li> 
+                <li class="navegacion" id="inicio">Inicio</li>
+                <li class="navegacion" id="cocktails">Cocktails</li>
+                <li class="navegacion" id="comidas">Comidas</li>
+                <li class="navegacion" id="tabla">Tabla Magica</li> 
             </ul>
         </nav>
     </header>
-    <main>
-        <section>
-            <ul class="lista-principal">
-                <li>
-                    <img src="./imgs/sorrentinos-tricolor.jpg" alt="sorrentinos con salsa">
-                </li>
-                <li>
-                    <img src="./imgs/real-burger.jpg" alt="hamburguesa de carne completa">
-                </li>
-                <li>
-                    <img src="./imgs/cocktail-red.jpg" alt="cocktail rojo fondo azul">
-                </li>
-            </ul>
-        </section>
-        <section>
-            <div class="contenedor-contacto">
-                <h2>Envianos un mensaje</h2>
-                <h4>Mandanos tu receta o envianos tu opinion sobre el servicio y los productos.</h4>
-                <form id="formularioContacto">
-                    <input type="text" name="nombre" placeholder="Ingrese su nombre" maxlength="15" required>
-                    <input type="email" name="email" placeholder="Ingrese su mail" maxlength="35" required>
-                    <textarea name="mensaje" rows="20" placeholder="Escribinos tu mensaje" maxlength="800" required></textarea>
-                    <div>
-                        <div>
-                            <p id="captcha"></p>
-                            <button id="btnGenerarCaptcha" type="button">🔄</button>
-                        </div>
-                        <input id="inputCaptchaIngresado" type="text" name="captcha" maxlength="6" placeholder="Ingrese captcha" required>
-                        <p id="alertaCaptcha"></p>
-                    </div>
-                    <button id="btnEnviarForm" class="d-none" type="submit">Enviar</button>
-                </form>
-            </div>
-        </section>
+    <main id="main">
     </main>
     <footer>
         <p>Visitanos en nuestras redes sociales</p>
