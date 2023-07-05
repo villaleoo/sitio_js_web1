@@ -86,8 +86,6 @@ function renderContenidoDeSeccion(idSeccionSeleccionada) {
     }
 }
 
-
-
 /////funcion controladora seccion coctails y recetas
 async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio) {  
     /*se podria llamar al spinner aqui */
@@ -184,8 +182,6 @@ async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio)
     }   
 }
 
-
-
 /////funcion controladora seccion tabla magica
 async function inicializarSeccionTabla() {
     const contenedor=document.querySelector("#main");
@@ -265,7 +261,6 @@ async function inicializarSeccionTabla() {
         }
         
         /////////////////////////////////////////////////////////////////
-
         function obtenerIngredientesIngresados(targetFormulario) {
             let arregloValores=[];
             for (const contenidoForm of targetFormulario) {          //esto recorre cada elemento que contiene el form y si encuentra un select guarda su valor en un arreglo, una vez que encuentra los valores de todos los select retorna el arreglo
@@ -276,7 +271,6 @@ async function inicializarSeccionTabla() {
             
             return arregloValores;
         }
-        
         
         async function obtenerRecetasRecomendadasUsuario(ingredientesUsuario) {
             let url = new URL('https://649cbbcd048075719238782f.mockapi.io/api/recetas');
@@ -331,7 +325,6 @@ async function inicializarSeccionTabla() {
                 tabla.appendChild(body)
                 contenedor.appendChild(tabla);
             }
-            
             
             for (let i = 0; i < arregloRecetasUsuario.length; i++) {
                 let fila = document.createElement("tr");
@@ -399,7 +392,6 @@ async function inicializarSeccionTabla() {
         return null;  
     }
 }
-
 
 ////////funcion controladora seccion inicio
 async function inicializarInicio() {
@@ -568,10 +560,6 @@ async function inicializarInicio() {
 }
 ///////////////////////////////////////////////////////////FUNCIONES PARA TODO EL SITIO////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
 function inicializarError() {
     let contenedor = document.querySelector("#main");
     contenedor.innerHTML='';
@@ -579,7 +567,6 @@ function inicializarError() {
                         <h1>404 not found 😡</h1>`;
 
 }
-
 
 function mostrarReceta(receta) {
     let id= receta.id;
@@ -601,11 +588,6 @@ function mostrarReceta(receta) {
                         </div>`;
     contenedor.appendChild(articulo);
 }
-
-
-
-
-
 
 function renderizarLista(arregloRecetas) {
     
