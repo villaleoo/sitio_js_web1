@@ -72,7 +72,7 @@ function renderContenidoDeSeccion(idSeccionSeleccionada) {
                             <p>Cargando...</p>
                            </div>`;
 
-
+    
     if(idSeccionSeleccionada == "inicio"){
         inicializarInicio();
     }else if(idSeccionSeleccionada == "cocktails" || idSeccionSeleccionada == "comidas"){
@@ -88,7 +88,6 @@ function renderContenidoDeSeccion(idSeccionSeleccionada) {
 
 /////funcion controladora seccion coctails y recetas
 async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio) {  
-    /*se podria llamar al spinner aqui */
     const cantidadItemsPagina=8;
     const contenedor=document.querySelector("#main");
     let arregloRecetasFiltrado= await obtenerListaParcialRecetasApi(paginacionDeInicio,cantidadItemsPagina,seccionSeleccionada);
@@ -108,7 +107,7 @@ async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio)
         btnSiguiente.textContent="Siguiente🔜";
         btnAnterior.textContent="Anterior🔙";
         btnBusqueda.textContent="🔍";
-        btnBusqueda.classList.add("btn-busqueda-recetas")
+        btnBusqueda.classList.add("btn-busqueda-recetas");
         txtPaginacion.textContent=`- ${paginacionDeInicio} -`;
         btnBusqueda.addEventListener("click", ()=>{
             buscarRecetas(arregloBusqueda)
@@ -124,15 +123,15 @@ async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio)
         
         
         if(arregloRecetasFiltrado.length == cantidadItemsPagina){ /*SI LA API ESTA TRAYENDO DE A 8 (cantidadItemsPagina),segui habilitando el evento para q traiga mas paginas */
-        btnSiguiente.addEventListener("click", ()=>{
-            avanzarSeccion(seccionSeleccionada, paginacionDeInicio);
+            btnSiguiente.addEventListener("click", ()=>{
+                avanzarSeccion(seccionSeleccionada, paginacionDeInicio);
         })
-        }
+        }   /*else desaparecer boton */
         if(paginacionDeInicio != minPaginas){ /*el minPaginas sirve para eventualmente no mostrar la pagina 1 y comenzar con minPaginas en 2 (tambien modificar variable "padre" paginacionDeInicio)*/
-        btnAnterior.addEventListener("click", ()=>{         
-            retrocederSeccion(seccionSeleccionada, paginacionDeInicio);
+            btnAnterior.addEventListener("click", ()=>{         
+                retrocederSeccion(seccionSeleccionada, paginacionDeInicio);
         })
-        }
+        }   /*else desaparecer boton */
         
         renderizarLista(arregloRecetasFiltrado);
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -308,21 +307,22 @@ async function inicializarSeccionTabla() {
         function renderizarTabla(arregloRecetasUsuario) {
             let encabezados=["Resultados", "Ingredientes"];
             let tabla='';
-            let body=document.createElement("tbody");
+            let cuerpoTabla=document.createElement("tbody");    /*antes llamada body 😢 */
+
             
             if(document.querySelector("#tablaRecetas")){
                 tabla= document.querySelector("#tablaRecetas");
                 tabla.innerHTML='';
                 if(arregloRecetasUsuario.length > 0){
                     tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
-                    tabla.appendChild(body);
+                    tabla.appendChild(cuerpoTabla);
                 }
                 
             }else{
                 tabla=document.createElement("table");
                 tabla.id="tablaRecetas";
                 tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
-                tabla.appendChild(body)
+                tabla.appendChild(cuerpoTabla)
                 contenedor.appendChild(tabla);
             }
             
@@ -333,7 +333,7 @@ async function inicializarSeccionTabla() {
                 }else{
                     fila.innerHTML+=`<td><button class="estilos-btn-tabla btn-tabla" id="btnResultadosTabla${i}">${arregloRecetasUsuario[i]["recetas"].length} resultados</button></td><td>${arregloRecetasUsuario[i]["ingredientes"]}</td><button value="${i}"  id="btnEliminar${i}">❌</button>`;
                 }
-                body.appendChild(fila);
+                cuerpoTabla.appendChild(fila);
                 document.querySelector(`#btnResultadosTabla${i}`).addEventListener("click",()=>{renderizarLista(arregloRecetasUsuario[i]["recetas"])});
                 document.querySelector(`#btnEliminar${i}`).addEventListener("click", (e)=> {
                     arregloRecetasUsuario.splice(i, 1);
@@ -344,6 +344,7 @@ async function inicializarSeccionTabla() {
                 });
                 
             }   
+            
         }
 
         function generarRecetasAleatorias() {
@@ -436,10 +437,10 @@ async function inicializarInicio() {
             let formulario= document.createElement("form");
             let parrafoCaptcha=document.createElement("p");
             let alertaCaptcha=document.createElement("p");
-            let tituloCaptcha=document.createElement("h2");
-            let subtituloCaptcha=document.createElement("h4");
-            tituloCaptcha.innerHTML="Contacta con nosotros";
-            subtituloCaptcha.innerHTML="Envianos tu receta o danos tu opinion de nuestro servicio."
+            let tituloContacto=document.createElement("h2");
+            let subtituloContacto=document.createElement("h4");
+            tituloContacto.innerHTML="Contacta con nosotros";
+            subtituloContacto.innerHTML="Envianos tu receta o danos tu opinion de nuestro servicio."
             
             formulario.classList.add("formulario-contacto");
             formulario.id="formContacto";
@@ -447,8 +448,9 @@ async function inicializarInicio() {
             alertaCaptcha.id='alertaCaptcha';
             parrafoCaptcha.id="layoutCaptcha";
             parrafoCaptcha.innerHTML=`Captcha: ${captcha}`;
-            formulario.appendChild(tituloCaptcha);
-            formulario.appendChild(subtituloCaptcha);
+            formulario.appendChild(tituloContacto);
+            formulario.appendChild(subtituloContacto);
+
             inputsForm.forEach(elemento =>{
                 
                 if(elemento != 'descripcion'){
