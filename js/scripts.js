@@ -360,7 +360,7 @@ async function inicializarSeccionTabla() {
                 botonEliminar.addEventListener("click",()=>{
                     arregloRecetasUsuario.splice(i, 1);
                     renderizarTabla(arregloRecetasUsuario);
-                    
+                    tablaEnDom.innerHTML='';
                     if(document.querySelector("#listaRecetas")){
                         document.querySelector("#listaRecetas").innerHTML='';
                     };
