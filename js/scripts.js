@@ -341,8 +341,9 @@ async function inicializarSeccionTabla() {
                 tabla=document.createElement("table");
                 tabla.id="tablaRecetas";
             }
-            
-            tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
+            if(arregloRecetas.length > 0){
+                tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
+            }
             
             for (let i = 0; i < arregloRecetas.length; i++) {
                 let fila= document.createElement("tr");
@@ -360,7 +361,6 @@ async function inicializarSeccionTabla() {
                 botonEliminar.addEventListener("click",()=>{
                     arregloRecetasUsuario.splice(i, 1);
                     renderizarTabla(arregloRecetasUsuario);
-                    document.querySelector("#tablaRecetas").innerHTML='';
                     if(document.querySelector("#listaRecetas")){
                         document.querySelector("#listaRecetas").innerHTML='';
                     };
