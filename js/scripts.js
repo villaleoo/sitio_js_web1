@@ -21,7 +21,7 @@ function main() {
     renderContenidoDeSeccion("inicio");
     renderNav();
     generarMenuResponsive();
-
+    
     function generarMenuResponsive() {
         btnMenuNavegacion.addEventListener("click", mostrarMenuResposive);
         
@@ -31,7 +31,7 @@ function main() {
         }
         
     }
-
+    
 }
 
 function renderNav() {
@@ -69,9 +69,9 @@ function renderContenidoDeSeccion(idSeccionSeleccionada) {
     let contenedor= document.querySelector("#main");
     contenedor.innerHTML=' ';
     contenedor.innerHTML+=`<div class="contenedor-spinner">
-                            <p>Cargando...</p>
-                           </div>`;
-
+    <p>Cargando...</p>
+    </div>`;
+    
     
     if(idSeccionSeleccionada == "inicio"){
         inicializarInicio();
@@ -101,7 +101,7 @@ async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio)
         let btnSiguiente= document.createElement("button");
         let btnAnterior=document.createElement("button");
         let txtPaginacion=document.createElement("p");
-        let inputBusqueda= iniciarInputDeBusqueda("text", 30, `Busca tu ${seccionSeleccionada}/ingredientes`, "inputBusqueda");
+        let inputBusqueda= iniciarInputDeBusqueda("text", 30, `Busca tus ${seccionSeleccionada}/ingredientes`, "inputBusqueda");
         
         contenedorPaginacion.classList.add("contenedor-paginacion");
         btnSiguiente.textContent="Siguiente🔜";
@@ -110,8 +110,11 @@ async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio)
         btnBusqueda.classList.add("btn-busqueda-recetas");
         txtPaginacion.textContent=`- ${paginacionDeInicio} -`;
         btnBusqueda.addEventListener("click", ()=>{
-            buscarRecetas(arregloBusqueda)
+            buscarRecetas(seccionSeleccionada,arregloBusqueda);
         });
+        inputBusqueda.addEventListener("keypress", (e)=>{
+            busquedaPorInput(e, seccionSeleccionada, arregloBusqueda);
+        })
         contenedor.innerHTML+=`<h2>${capitalizarTexto(seccionSeleccionada)}</h2>`;
         contenedor.appendChild(inputBusqueda);
         contenedor.appendChild(btnBusqueda);
@@ -123,62 +126,81 @@ async function inicializarSeccionListas(seccionSeleccionada, paginacionDeInicio)
         
         
         if(arregloRecetasFiltrado.length == cantidadItemsPagina){ /*SI LA API ESTA TRAYENDO DE A 8 (cantidadItemsPagina),segui habilitando el evento para q traiga mas paginas */
-            btnSiguiente.addEventListener("click", ()=>{
-                avanzarSeccion(seccionSeleccionada, paginacionDeInicio);
+        
+        btnSiguiente.addEventListener("click", ()=>{
+            avanzarSeccion(seccionSeleccionada, paginacionDeInicio);
         })
-        }   /*else desaparecer boton */
-        if(paginacionDeInicio != minPaginas){ /*el minPaginas sirve para eventualmente no mostrar la pagina 1 y comenzar con minPaginas en 2 (tambien modificar variable "padre" paginacionDeInicio)*/
-            btnAnterior.addEventListener("click", ()=>{         
-                retrocederSeccion(seccionSeleccionada, paginacionDeInicio);
-        })
-        }   /*else desaparecer boton */
-        
-        renderizarLista(arregloRecetasFiltrado);
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        function iniciarInputDeBusqueda(tipo, maxlen, pholder,id ) {
-            let input = document.createElement("input");
-            
-            input.type=tipo;
-            input.maxLength=maxlen;
-            input.placeholder=pholder;
-            input.id=id;
-            
-            return input;
-        }
-        function avanzarSeccion(seccion,pagina) {
-            pagina=pagina+1;
-            inicializarSeccionListas(seccion,pagina);
-            
-        }
-        function retrocederSeccion(seccion,pagina) {
-            pagina= pagina-1;
-            inicializarSeccionListas(seccion,pagina);
-        }
-        
-        function buscarRecetas(arregloDeBusqueda) {
-            let valorInputBusqueda= document.querySelector("#inputBusqueda").value.toLowerCase().trim();
-            let recetasEncontradas=[];
-            
-            if(valorInputBusqueda != ''){
-                arregloDeBusqueda.forEach(receta => {
-                    if(receta.nombre.toLowerCase().includes(valorInputBusqueda)){
-                        recetasEncontradas.push(receta);
-                    }
-                    receta.ingredientes.forEach(ingrediente => {
-                        if(ingrediente.toLowerCase().includes(valorInputBusqueda) && !recetasEncontradas.includes(receta)){     /*esto por si el algun ingrediente tambien esta en el nombre principal */
-                        recetasEncontradas.push(receta);
-                        }
-                    })
-                
-                })
-                renderizarLista(recetasEncontradas);
-            }   
-        
-        }
     }else{
-        inicializarError();
+        desaparecerBoton(btnSiguiente);
+        
     }   
+    if(paginacionDeInicio != minPaginas){ /*el minPaginas sirve para eventualmente no mostrar la pagina 1 y comenzar con minPaginas en 2 (tambien modificar variable "padre" paginacionDeInicio)*/
+    btnAnterior.addEventListener("click", ()=>{         
+        retrocederSeccion(seccionSeleccionada, paginacionDeInicio);
+    })
+}else{
+    desaparecerBoton(btnAnterior);
+    
+} 
+
+renderizarLista(arregloRecetasFiltrado);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function iniciarInputDeBusqueda(tipo, maxlen, pholder,id ) {
+    let input = document.createElement("input");
+    
+    input.type=tipo;
+    input.maxLength=maxlen;
+    input.placeholder=pholder;
+    input.id=id;
+    
+    return input;
+}
+function avanzarSeccion(seccion,pagina) {
+    pagina=pagina+1;
+    inicializarSeccionListas(seccion,pagina);
+    
+}
+function retrocederSeccion(seccion,pagina) {
+    pagina= pagina-1;
+    inicializarSeccionListas(seccion,pagina);
+}
+function desaparecerBoton(btn) {
+    btn.style.color="gray";
+    btn.style.cursor="auto";
+    btn.style.textDecoration="none";
+}
+function busquedaPorInput(e,seccion,arregloBusqueda ) {
+    if(e.code === "Enter"){
+        e.preventDefault();
+        buscarRecetas(seccion,arregloBusqueda);
+    }
+}
+function buscarRecetas(seccion, arregloDeBusqueda) {
+    let valorInputBusqueda= document.querySelector("#inputBusqueda").value.toLowerCase().trim();
+    let recetasEncontradas=[];
+    
+    if(valorInputBusqueda != ''){
+        arregloDeBusqueda.forEach(receta => {
+            if(receta.nombre.toLowerCase().includes(valorInputBusqueda)){
+                recetasEncontradas.push(receta);
+            }
+            receta.ingredientes.forEach(ingrediente => {
+                if(ingrediente.toLowerCase().includes(valorInputBusqueda) && !recetasEncontradas.includes(receta)){     /*esto por si el algun ingrediente tambien esta en el nombre principal */
+                recetasEncontradas.push(receta);
+            }
+        })
+        
+    })
+    renderizarLista(recetasEncontradas);
+}else{
+    inicializarSeccionListas(seccion,1)
+}   
+
+}
+}else{
+    inicializarError();
+}   
 }
 
 /////funcion controladora seccion tabla magica
@@ -273,28 +295,28 @@ async function inicializarSeccionTabla() {
         
         async function obtenerRecetasRecomendadasUsuario(ingredientesUsuario) {
             let url = new URL('https://649cbbcd048075719238782f.mockapi.io/api/recetas');
-            let recetasEncontradas=[]
+            let recetasEncontradas=[];
             try {
                 let promesa= await fetch(url);
-                let data= await promesa.json();
+                let data=await promesa.json();
                 if(promesa.ok){
                     data.forEach(receta=>{
-                        receta.ingredientes.forEach(ingrediente =>{
-                            ingredientesUsuario.forEach(ingredienteUsuario =>{
-                                if(ingrediente.toLowerCase() === ingredienteUsuario.toLowerCase() && !recetasEncontradas.includes(receta)){
+                        receta.ingredientes.forEach(ingrediente=>{
+                            ingredientesUsuario.forEach(ingredienteUsuario=>{
+                                if(ingrediente.toLowerCase() == ingredienteUsuario.toLowerCase() && !recetasEncontradas.includes(receta)){
                                     recetasEncontradas.push(receta);
                                 }
                             })
                         })
-                    })  /*EN ESTE CASO SIEMPRE SE ENCUENTRA AL MENOS UNA RECETA */
+                    })
                     if(arregloRecetasUsuario.length < maximoConsultasRecetas){
                         arregloRecetasUsuario.unshift({"recetas":recetasEncontradas, "ingredientes":ingredientesUsuario});
                     }else{
-                        arregloRecetasUsuario=agregarAlComienzoArr(arregloRecetasUsuario,{"recetas":recetasEncontradas, "ingredientes":ingredientesUsuario});
+                        arregloRecetasUsuario=agregarAlComienzoArr(arregloRecetasUsuario, {"recetas": recetasEncontradas, "ingredientes": ingredientesUsuario});
                     }
                     renderizarTabla(arregloRecetasUsuario);
                 }else{
-                    console.log("error sintaxis");
+                    console.log("error de sintaxis");
                 }
                 
             } catch (error) {
@@ -304,49 +326,75 @@ async function inicializarSeccionTabla() {
             
         }
         
-        function renderizarTabla(arregloRecetasUsuario) {
+        async function renderizarTabla(arregloRecetasUsuario) {
             let encabezados=["Resultados", "Ingredientes"];
             let tabla='';
-            let cuerpoTabla=document.createElement("tbody");    /*antes llamada body 😢 */
-
+            let cuerpoTabla=document.createElement("tbody");  
+            let tablaEnDom=document.querySelector("#tablaRecetas");
+            let arregloRecetas= await arregloRecetasUsuario;
             
-            if(document.querySelector("#tablaRecetas")){
+            if(tablaEnDom){
                 tabla= document.querySelector("#tablaRecetas");
                 tabla.innerHTML='';
-                if(arregloRecetasUsuario.length > 0){
-                    tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
-                    tabla.appendChild(cuerpoTabla);
-                }
                 
             }else{
                 tabla=document.createElement("table");
                 tabla.id="tablaRecetas";
-                tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
-                tabla.appendChild(cuerpoTabla)
-                contenedor.appendChild(tabla);
             }
             
-            for (let i = 0; i < arregloRecetasUsuario.length; i++) {
-                let fila = document.createElement("tr");
-                if(i === 0){
-                    fila.innerHTML+=`<td><span class="estilo-primer-fila">new</span><button class="estilos-btn-tabla btn-tabla" id="btnResultadosTabla${i}">${arregloRecetasUsuario[i]["recetas"].length} resultados</button></td><td>${arregloRecetasUsuario[i]["ingredientes"]}</td> <button value="${i}" id="btnEliminar${i}">❌</button>`;
-                }else{
-                    fila.innerHTML+=`<td><button class="estilos-btn-tabla btn-tabla" id="btnResultadosTabla${i}">${arregloRecetasUsuario[i]["recetas"].length} resultados</button></td><td>${arregloRecetasUsuario[i]["ingredientes"]}</td><button value="${i}"  id="btnEliminar${i}">❌</button>`;
-                }
-                cuerpoTabla.appendChild(fila);
-                document.querySelector(`#btnResultadosTabla${i}`).addEventListener("click",()=>{renderizarLista(arregloRecetasUsuario[i]["recetas"])});
-                document.querySelector(`#btnEliminar${i}`).addEventListener("click", (e)=> {
+            tabla.innerHTML+=`<thead><tr><th>${encabezados[0]}</th><th>${encabezados[1]}</th></tr></thead>`;
+            
+            for (let i = 0; i < arregloRecetas.length; i++) {
+                let fila= document.createElement("tr");
+                let columnaResultados=document.createElement("td");
+                let columnaIngredientes=document.createElement("td");
+                let botonEliminar=document.createElement("button");
+                let botonResultados= document.createElement("button");
+                
+                botonEliminar.textContent="❌";
+                botonResultados.textContent=`${arregloRecetas[i]["recetas"].length} resultados`;
+                botonResultados.classList.add("btn-tabla");
+                botonResultados.addEventListener("click", ()=>{
+                    renderizarLista(arregloRecetas[i]["recetas"]);
+                });
+                botonEliminar.addEventListener("click",()=>{
                     arregloRecetasUsuario.splice(i, 1);
                     renderizarTabla(arregloRecetasUsuario);
+                    
                     if(document.querySelector("#listaRecetas")){
                         document.querySelector("#listaRecetas").innerHTML='';
-                    }
-                });
+                    };
+                })
+                if(i === 0){
+                    let spanPrimerFila=document.createElement("span");
+                    spanPrimerFila.textContent="new";
+                    spanPrimerFila.classList.add("estilo-primer-fila");
+                    columnaResultados.appendChild(spanPrimerFila);
+                }
+                if(arregloRecetas[i]["ingredientes"].length == 1){
+                    columnaIngredientes.innerHTML+=`${arregloRecetas[i]["ingredientes"][0]}.`;
+                }else{
+                    columnaIngredientes.innerHTML+=`${arregloRecetas[i]["ingredientes"][0]}, ${arregloRecetas[i]["ingredientes"][1].toLowerCase()}.`
+                }
                 
-            }   
+                columnaResultados.appendChild(botonResultados);
+                
+                fila.appendChild(columnaResultados);
+                fila.appendChild(columnaIngredientes);
+                fila.appendChild(botonEliminar);
+                
+                cuerpoTabla.appendChild(fila);
+            }
+            
+            tabla.appendChild(cuerpoTabla);
+            if(tablaEnDom){
+                tabla.appendChild(cuerpoTabla);
+            }else{
+                contenedor.appendChild(tabla);
+            }  
             
         }
-
+        
         function generarRecetasAleatorias() {
             const cantidad= 3;
             
@@ -406,7 +454,7 @@ async function inicializarInicio() {
         crearTarjetasImgs(arregloImgsRecetas, contenedor);
         crearFormularioContacto(contenedor);
         ////////////////////////////////////////////////////////////////////////////////////////
-
+    
         function crearTarjetasImgs(arrInformacion, contenedor) {
             let seccion= document.createElement("section");
             seccion.classList.add("tarjetas-inicio");
@@ -428,9 +476,9 @@ async function inicializarInicio() {
                 });
                 seccion.appendChild(contenedorTarjeta);
             }
-            contenedor.appendChild(seccion)
+            contenedor.appendChild(seccion);
         }
-
+    
         function crearFormularioContacto(contenedor) {
             const inputsForm=["nombre", "email", "descripcion","captcha"];
             const idCampos="contacto";
@@ -440,8 +488,8 @@ async function inicializarInicio() {
             let tituloContacto=document.createElement("h2");
             let subtituloContacto=document.createElement("h4");
             tituloContacto.innerHTML="Contacta con nosotros";
-            subtituloContacto.innerHTML="Envianos tu receta o danos tu opinion de nuestro servicio."
-            
+            subtituloContacto.innerHTML="Envianos tu receta o danos tu opinion de nuestro servicio.";
+
             formulario.classList.add("formulario-contacto");
             formulario.id="formContacto";
             formulario.addEventListener("submit",enviarFormulario);
@@ -452,11 +500,11 @@ async function inicializarInicio() {
             formulario.appendChild(subtituloContacto);
 
             inputsForm.forEach(elemento =>{
-                
+
                 if(elemento != 'descripcion'){
                     let input = crearInput(elemento,idCampos);
                     formulario.appendChild(input);
-                    
+
                 }else{
                     let txtArea=document.createElement("textarea");
                     txtArea.placeholder="Escribinos tu consulta.";
@@ -466,7 +514,7 @@ async function inicializarInicio() {
                     formulario.appendChild(txtArea);
                 }
             })
-            formulario.appendChild(parrafoCaptcha)
+            formulario.appendChild(parrafoCaptcha);
             formulario.appendChild(alertaCaptcha);
             contenedor.appendChild(formulario);
 
@@ -477,14 +525,14 @@ async function inicializarInicio() {
                 input.classList.add(`input-${identificador}`);
                 input.name=tipoInput;
                 input.required=true;
-                
+
                 if(tipoInput == "nombre"){
                     input.type="text";
                     input.maxLength=20;
                     input.placeholder="Ingrese su nombre";
                 }
                 if(tipoInput == "email"){
-                    input.type="email"
+                    input.type="email";
                     input.maxLength=30;
                     input.placeholder="Ingrese su e-mail";
                 }
@@ -495,7 +543,7 @@ async function inicializarInicio() {
                     input.placeholder="Ingrese captcha";
                     input.addEventListener("input",verificarCaptcha); //se mantiene "escuchando" cuando el usuario cambia el valor del input donde debe ingresar el captcha
                     input.addEventListener("blur",verificarCaptcha); //se puede utilizar blur tambien para lo anterior(cambia detalles)
-                    
+
                 }
                 return input;
             }
@@ -507,10 +555,10 @@ async function inicializarInicio() {
             let alertaCaptcha=document.querySelector("#alertaCaptcha");
             let btnEnvioForm=document.querySelector(".btn-form-contacto");
             alertaCaptcha.innerHTML='';
-            
+
             if(captchaIngresado === captcha){
                 alertaCaptcha.innerHTML="Captcha ingresado correctamente.";
-                
+
                 if(!btnEnvioForm){
                     let btnEnviar=document.createElement("button");
                     btnEnviar.classList.add("btn-form-contacto");
@@ -529,7 +577,7 @@ async function inicializarInicio() {
                 }
             }
         }
-
+    
         function enviarFormulario(e) {
             e.preventDefault();
             let formulario=document.querySelector("#formContacto");
@@ -545,9 +593,9 @@ async function inicializarInicio() {
             document.querySelector("#layoutCaptcha").innerHTML=`Captcha: ${captcha}`;
         }  
     }else{
-        inicializarError()
+        inicializarError();
     }
-    
+
     function obtenerCaptchaAleatorio() {
         const valoresCaptcha= ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0'];
         const cantidadCaracteresCaptcha=6; // (coincidir maxlength del input)
@@ -557,70 +605,100 @@ async function inicializarInicio() {
         }
         return captcha;  
     }
-    
-
 }
 ///////////////////////////////////////////////////////////FUNCIONES PARA TODO EL SITIO////////////////////////////////////////////////////////////////////////////////////////
-
 function inicializarError() {
     let contenedor = document.querySelector("#main");
     contenedor.innerHTML='';
     contenedor.innerHTML+=`<p>ups...</p>
-                        <h1>404 not found 😡</h1>`;
-
+    <h1>404 not found 😡</h1>`;
+    
 }
 
 function mostrarReceta(receta) {
     let id= receta.id;
     let contenedor=document.querySelector("#main");
     let articulo=document.createElement("article");
+    let contenedorDetalles= crearDiv("contenedor-detalles-receta");
+    let contenedorTexto= crearDiv("texto-detalles-receta");
     let seccionCheck=document.querySelector(".seccion-selec");
+    let parrafoImagen=document.createElement("p");
+    let parrafoIngredientes=document.createElement("p");
+    let parrafoDescripcion=document.createElement("p");
+    
     seccionCheck.classList.remove("seccion-selec");
     contenedor.innerHTML='';
     window.history.pushState({id}, `${id}`, `/receta/${id}`); 
     document.title=`${receta.nombre} / BooM`;
     articulo.classList.add("vista-receta");
-    articulo.innerHTML+=`<h2>${receta.nombre}</h2>
-                        <div class="contenedor-detalles-receta">
-                            <p>imgReceta🍕</p>
-                            <div class="texto-detalles-receta">
-                                <p>Ingredientes: ${receta.ingredientes}</p>
-                                <p>${receta.descripcion}</p>
-                            </div>
-                        </div>`;
+    articulo.innerHTML+=`<h2>${receta.nombre}</h2>`;
+    parrafoImagen.innerHTML="imagenReceta🍕";
+    
+    for (let i = 0; i < receta.ingredientes.length; i++) {
+        if(i == 0){
+            parrafoIngredientes.innerHTML+=`${receta.ingredientes[i]}, `
+        }else if(i == receta.ingredientes.length-1){
+            parrafoIngredientes.innerHTML+=`${receta.ingredientes[i].toLowerCase()}. `
+            
+        }else{
+            parrafoIngredientes.innerHTML+=`${receta.ingredientes[i].toLowerCase()}, `
+        }
+    }
+    parrafoDescripcion.innerHTML+=`${receta.descripcion}`;
+    contenedorTexto.appendChild(parrafoIngredientes);
+    contenedorTexto.appendChild(parrafoDescripcion);
+    contenedorDetalles.appendChild(parrafoImagen);
+    contenedorDetalles.appendChild(contenedorTexto);
+    articulo.appendChild(contenedorDetalles)
     contenedor.appendChild(articulo);
+}
+function crearDiv(clase) {
+    let nuevoDiv=document.createElement("div");
+    nuevoDiv.classList.add(clase);
+    
+    return nuevoDiv;
 }
 
 function renderizarLista(arregloRecetas) {
     
     if(arregloRecetas.length > 0){
         let existeListaEnDom=document.querySelector("#listaRecetas");  /*si no la encuentra valdra null*/
-
+        let contenedorMain='';
+        let listaRecetas='';
+        
         if(existeListaEnDom){
-            let lista= document.querySelector("#listaRecetas");
-            lista.innerHTML='';
-            arregloRecetas.forEach(receta=>{
-                lista.innerHTML+=`<article class="item-lista-recetas" id="receta${receta.id}"><h3>${receta.nombre}</h3>
-                <p>Ingredientes: ${receta.ingredientes}</p></article>`;
-                document.querySelector(`#receta${receta.id}`).addEventListener("click", ()=>{mostrarReceta(receta)});
-            });
-            
+            listaRecetas= document.querySelector("#listaRecetas");
+            listaRecetas.innerHTML='';
         }else{
-            let contenedor=document.querySelector("#main");
-            let listaRecetas= document.createElement("section");
-            listaRecetas.id="listaRecetas";
+            contenedorMain=document.querySelector("#main");
+            listaRecetas= document.createElement("section");
+            listaRecetas.id="listaRecetas"; 
+        }
+        
+        arregloRecetas.forEach(receta => {
+            let itemLista=document.createElement("article");
+            let parrafoIngrediente= document.createElement("p");
+            itemLista.classList.add("item-lista-recetas");
+            itemLista.id=`receta${receta.id}`;
+            itemLista.innerHTML+=`
+            <h3>${receta.nombre}</h3> `;
             
-            arregloRecetas.forEach(receta => {
-                let itemLista=document.createElement("article");
-                itemLista.classList.add("item-lista-recetas");
-                itemLista.id=`receta${receta.id}`;
-                itemLista.innerHTML+=`
-                <h3>${receta.nombre}</h3>
-                <p>Ingredientes: ${receta.ingredientes}</p>`;
-                itemLista.addEventListener("click", ()=>{ mostrarReceta(receta)});
-                listaRecetas.appendChild(itemLista); 
-            })
-            contenedor.appendChild(listaRecetas);
+            for (let i = 0; i < receta.ingredientes.length; i++) {
+                if(i == 0){
+                    parrafoIngrediente.innerHTML+=`${receta.ingredientes[i]}, `
+                }else if(i == receta.ingredientes.length-1){
+                    parrafoIngrediente.innerHTML+=`${receta.ingredientes[i].toLowerCase()}. `
+                    
+                }else{
+                    parrafoIngrediente.innerHTML+=`${receta.ingredientes[i].toLowerCase()}, `
+                }
+            }
+            itemLista.appendChild(parrafoIngrediente);
+            itemLista.addEventListener("click", ()=>{ mostrarReceta(receta)});
+            listaRecetas.appendChild(itemLista); 
+        })
+        if(!existeListaEnDom){
+            contenedorMain.appendChild(listaRecetas);
         }
         
     }

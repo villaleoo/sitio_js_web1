@@ -1,7 +1,9 @@
 body{
     margin: 0;
     background-color: rgb(58, 33, 34);
+    
     color: rgb(255, 253, 253);
+    
     font-family:  Georgia, sans-serif; 
 }
 header{
@@ -36,7 +38,7 @@ button{
     text-decoration: underline;
 }
 .navegacion{
-    cursor: pointer;
+    cursor: pointer
 }
 .contenedor-spinner{
     height: 60vh;
@@ -53,6 +55,7 @@ main{
 footer{
     width: 100%;
     height: 20vh;
+    background-color: rgba(255, 255, 255, 0.030);
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -72,9 +75,7 @@ section#listaRecetas > article{
     margin: 1% 0;
     cursor: pointer;
 }
-
 /*///////////////INICIO///////////////*/
-
 .tarjetas-inicio{
     width: auto;
     display: flex;
@@ -108,7 +109,7 @@ section#listaRecetas > article{
 }
 .texto-articulo > h2{
     text-transform: uppercase;
-  
+
 }
 .contenedor-contacto{
     text-align: center;
@@ -129,6 +130,7 @@ input#inputBusqueda{
     width: 30vh;
     border-radius: 5px;
     border: none;
+    margin: 0 5px;
 }
 .btn-busqueda-recetas{
     width: 8vh;
@@ -147,10 +149,8 @@ input#inputBusqueda{
     margin:0 5px;
     text-decoration: underline;
 }
-
 /*//////////////////////////////////////TABLA MAGICA///////////////////////////////////*/
 form#formularioDeTabla{
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -158,13 +158,10 @@ form#formularioDeTabla{
 form#formularioDeTabla > select{
     width:40vh;
 }
-.contenedor-botones-form-tabla{
-    position: absolute;
-    bottom: 0;
-}
 .contenedor-botones-form-tabla > button{
     border-radius: 10px;
     border: none;
+    margin: 3px;
 }
 table#tablaRecetas{
     width: 100%;
@@ -180,7 +177,6 @@ span.estilo-primer-fila{
     font-size: xx-small;
     color: red;
 }
-
 /*////////////////////////////VISTA RECETA////////////////////*/
 .vista-receta{
     background-color: rgba(255, 255, 255, 0.041);
@@ -190,8 +186,6 @@ span.estilo-primer-fila{
     flex-direction: column;
     align-items: center;
 }
-
-
 @media only screen and (max-width: 1024px){
     body{
         font-size: medium;
@@ -271,10 +265,11 @@ span.estilo-primer-fila{
     form#formularioDeTabla{
         height: 20vh;
     }
-    
-     
+    .contenedor-botones-form-tabla{
+        margin-top: 1%;
+    }
+        
 }
-
 @media only screen and (min-width: 1025px){
     body{
         font-size: large;
@@ -312,6 +307,7 @@ span.estilo-primer-fila{
     }
     footer{
         margin-top: 2%;
+
     }
     /*////////////////////INICIO////////////////*/
     .tarjetas-inicio{
@@ -341,21 +337,13 @@ span.estilo-primer-fila{
     /*/////////////////////////TABLA MAGICA////////////////////*/
     form#formularioDeTabla{
         height: 15vh;
+        position: relative;
+    }
+    .contenedor-botones-form-tabla{
+        position: absolute;
+        bottom: 0;
     }
     table#tablaRecetas{
         margin-top: 2%;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
